@@ -7,6 +7,7 @@ readme = "README"
 build = "build.rs"
 
 [dependencies]
+url = "1.4.0"
 xml-rs = "0.4.1"
 base64 = "0.4.1"
 

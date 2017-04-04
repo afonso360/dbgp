@@ -56,7 +56,7 @@ fn main() {
 
     let header = dest_path.clone()
         .join("include")
-        .join("my_header.h");
+        .join("libdbgp.h");
 
     cheddar::Cheddar::new().expect("could not read manifest")
         .run_build(header.clone());

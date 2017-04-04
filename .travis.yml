@@ -30,9 +30,9 @@ matrix:
       rust: stable
 
 script:
-  - cargo build --verbose --no-default-features --features "gdb"
-  - cargo test --verbose --no-default-features --features "gdb"
-  - cargo doc --verbose --no-default-features --features "gdb"
+  - cargo build --verbose
+  - cargo test --verbose
+  - cargo doc --verbose
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then

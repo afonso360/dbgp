@@ -12,8 +12,8 @@ xml-rs = "0.4.1"
 base64 = "0.4.1"
 
 [build-dependencies]
-rusty-cheddar = "0.3.0"
+rusty-cheddar = { git = "https://github.com/kinetiknz/rusty-cheddar.git" }
 
 [lib]
 name = "dbgp"
-crate-type = ["rlib", "cdylib"]
+crate-type = ["rlib", "staticlib", "cdylib"]

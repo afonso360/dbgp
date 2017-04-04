@@ -27,7 +27,7 @@ use std::fs::{OpenOptions, File};
 
 static LICENSE_HEADER: &'static str = "\
 /*
- * Copyright (c) the dbgp contributors. All rights reserved.
+ * Copyright (c) the libdbgp contributors. All rights reserved.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as

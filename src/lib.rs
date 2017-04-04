@@ -18,14 +18,8 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-mod escape;
-mod c_api;
+pub mod escape;
+pub mod c_api;
 
+pub use c_api::*;
 
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}

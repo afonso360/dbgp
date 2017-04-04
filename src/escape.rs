@@ -19,8 +19,8 @@
  */
 
 
-#[no_mangle] pub extern fn dbgp_escape_string(string: String) -> String {
-    return string;
+#[no_mangle] pub extern "C" fn dbgp_escape_string(string: u8) -> u16 {
+    return string as u16 * 2;
 }
 
 

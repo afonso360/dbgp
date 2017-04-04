@@ -2,7 +2,9 @@
 
 Implementation of the dbgp protocol
 
-This intends to comply with the protocol available on date: 2017-04-04
+This intends to comply with the protocol available on date: 2017-04-04 on [this][dbgp] website
+The protocol is also available in this [git repository][dbgp-git]
+
 
 ## License
 
@@ -18,5 +20,5 @@ Read [LICNESE][license] for more information.
 [appveyor]: https://ci.appveyor.com/project/afonso360/dbgp
 [coveralls]: https://coveralls.io/github/afonso360/dbgp
 [license]: LICENSE
-
-
+[dbgp]: https://xdebug.org/docs-dbgp.php#id21
+[dbgp-git]: https://github.com/derickr/dbgp

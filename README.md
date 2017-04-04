@@ -1,6 +1,8 @@
 # dbgp [![travis-badge][]][travis] [![appveyor-badge][]][appveyor] [![coveralls-badge][]][coveralls] [![license-badge][]][license]
 
-Implementation of the dbgp server
+Implementation of the dbgp protocol
+
+This intends to comply with the protocol available on date: 2017-04-04
 
 ## License
 

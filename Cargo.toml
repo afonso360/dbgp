@@ -7,10 +7,12 @@ readme = "README"
 build = "build.rs"
 
 [dependencies]
+xml-rs = "0.4.1"
+base64 = "0.4.1"
 
 [build-dependencies]
 rusty-cheddar = "0.3.0"
 
 [lib]
 name = "dbgp"
-crate-type = ["cdylib"]
+crate-type = ["rlib", "cdylib"]

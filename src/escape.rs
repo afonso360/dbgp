@@ -18,9 +18,10 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-mod escape;
-mod c_api;
 
+#[no_mangle] pub extern fn dbgp_escape_string(string: String) -> String {
+    return string;
+}
 
 
 #[cfg(test)]

@@ -18,14 +18,4 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-mod escape;
-mod c_api;
-
-
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}
+pub use escape::dbgp_escape_string;

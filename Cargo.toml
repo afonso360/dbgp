@@ -1,0 +1,12 @@
+[package]
+name = "dbgp"
+version = "0.0.1"
+license-file = "LICENSE"
+authors = ["Afonso Bordado <afonsobordado@az8.co>"]
+readme = "README"
+
+[dependencies]
+
+[lib]
+name = "dbgp"
+crate-type = ["cdylib"]

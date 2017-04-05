@@ -18,6 +18,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#![feature(alloc_system)]
 #![deny(missing_docs)]
 //#![deny(warnings)]
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]

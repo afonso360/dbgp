@@ -12,7 +12,7 @@ xml-rs = "0.4.1"
 base64 = "0.4.1"
 
 [build-dependencies]
-rusty-cheddar = { git = "https://github.com/kinetiknz/rusty-cheddar.git" }
+rusty-cheddar = { git = "https://github.com/mozilla/moz-cheddar.git" }
 
 [lib]
 name = "dbgp"

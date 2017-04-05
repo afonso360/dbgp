@@ -58,8 +58,12 @@ install:
   - cargo -vV
 
 build_script:
-    - cargo build --verbose %cargoflags%
+    - cd dbgp && cargo build --verbose %cargoflags%
+    - cd dbgp_capi && cargo build --verbose %cargoflags%
 
 test_script:
-    - cargo test --verbose %cargoflags%
+    - cd dbgp && cargo test --verbose %cargoflags%
+    - cd dbgp_capi cargo test --verbose %cargoflags%
+    - cd dbgp && cargo doc --verbose %cargoflags%
+    - cd dbgp_capi cargo doc --verbose %cargoflags%
 

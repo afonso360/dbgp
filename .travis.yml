@@ -30,9 +30,12 @@ matrix:
       rust: stable
 
 script:
-  - cargo build --verbose
-  - cargo test --verbose
-  - cargo doc --verbose
+  - cd dbgp && cargo build --verbose
+  - cd dbgp && cargo test --verbose
+  - cd dbgp && cargo doc --verbose
+  - cd dbgp_capi && cargo build --verbose
+  - cd dbgp_capi && cargo test --verbose
+  - cd dbgp_capi && cargo doc --verbose
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then

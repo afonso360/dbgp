@@ -18,8 +18,10 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#![deny(missing_docs)]
+//#![deny(warnings)]
+#![doc(test(attr(allow(unused_variables), deny(warnings))))]
+
+//! This library implements the dbgp protocol
+
 pub mod escape;
-pub mod c_api;
-
-pub use c_api::*;
-

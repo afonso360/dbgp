@@ -107,6 +107,15 @@ mod tests {
     }
 
     #[test]
+    fn codec_decode_incomplete_packet_length() {
+        let mut codec = DbgpClientCodec;
+        let mut packet = BytesMut::from("4");
+
+        let d = codec.decode(&mut packet);
+        assert_eq!(d.unwrap(), None);
+    }
+
+    #[test]
     #[ignore] //ignored until we have a more robust decoder
     /// This test is just to make sure that if the length is wrong
     /// we don't try to use the packet

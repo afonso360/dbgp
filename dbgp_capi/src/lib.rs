@@ -38,12 +38,16 @@ use std::str;
 /// [section 6](https://xdebug.org/docs-dbgp.php#id27)
 /// of the dbgp protocol
 ///
-///
+/// The returning string must be deallocated by calling free()
 //TODO: Fix the unwraps
 //TODO: Check how many allocations we are doing with this operation
 #[no_mangle]
 pub extern "C"
 fn dbgp_escape_string(input_str: *const c_char) -> *const c_char {
+    if input_str.is_null() {
+        return std::ptr::null();
+    }
+
     let input = unsafe { CStr::from_ptr(input_str) };
     let input_buf: &str = str::from_utf8(input.to_bytes()).unwrap();
     let escaped_string = dbgp::escape::escape(input_buf.to_owned());
@@ -52,16 +56,22 @@ fn dbgp_escape_string(input_str: *const c_char) -> *const c_char {
 
 #[cfg(test)]
 mod tests {
-    use escape::escape;
+    use super::*;
     #[test]
     fn escape_c_quotes() {
-        //use std::ffi::CString;
-        let command = CString::new("property_get -n \"$x['a b']\" -d 0 -c 0 -p 0").unwrap();
-        let result = CString::new("property_get -n \\\"$x['a b']\\\" -d 0 -c 0 -p 0").unwrap();
-        assert_eq!(escape(command.into_raw()), result.into_raw());
+        use std::ffi::CString;
+        let command = CString::new("\"$x[\"a b\"]\"").unwrap();
+        let expected_result = "\"$x[\\\"a b\\\"]\"";
+
+        let result_cstr = unsafe {
+            CStr::from_ptr(dbgp_escape_string(command.as_ptr()))
+        };
+
+        assert_eq!(result_cstr.to_bytes(), expected_result.as_bytes());
     }
 
     #[test]
-    fn it_works() {
+    fn escape_null_ptr() {
+        assert_eq!(dbgp_escape_string(std::ptr::null()), std::ptr::null());
     }
 }

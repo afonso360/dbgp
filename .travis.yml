@@ -1,6 +1,14 @@
 language: rust
 sudo: false
 
+os:
+  - linux
+  - osx
+rust:
+  - nightly
+  #- beta
+  #- stable
+
 addons:
   apt:
     packages:
@@ -14,20 +22,6 @@ addons:
 
 matrix:
   fast_finish: true
-  include:
-    - os: linux
-      rust: nightly
-    - os: linux
-      rust: beta
-    - os: linux
-      rust: stable
-
-    - os: osx
-      rust: nightly
-    - os: osx
-      rust: beta
-    - os: osx
-      rust: stable
 
 script:
   - (cd dbgp && cargo build --verbose)

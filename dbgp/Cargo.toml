@@ -1,15 +1,18 @@
 [package]
-name = "dbgp"
-version = "0.0.1"
 authors = ["Afonso Bordado <afonsobordado@az8.co>"]
 license-file = "../LICENSE"
+name = "dbgp"
 readme = "../README"
+version = "0.0.1"
 
 [dependencies]
+base64 = "0.4.1"
+futures = "0.1.12"
+tokio-core = "0.1.6"
+tokio-io = "0.1.1"
 url = "1.4.0"
 xml-rs = "0.4.1"
-base64 = "0.4.1"
 
 [lib]
-name = "dbgp"
 crate-type = ["rlib", "dylib"]
+name = "dbgp"

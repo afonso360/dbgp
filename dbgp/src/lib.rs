@@ -33,6 +33,7 @@ extern crate bytes;
 pub mod escape;
 mod codec;
 mod protocol;
+mod error_codes;
 
 use tokio_service::Service;
 use futures::{future, Future, BoxFuture};

@@ -51,3 +51,6 @@
   - [ ] [Spawnpoints](https://xdebug.org/docs-dbgp.php#id69)
   - [ ] [Notifications](https://xdebug.org/docs-dbgp.php#id75)
   - [ ] [Interactive shell](https://xdebug.org/docs-dbgp.php#id78)
+
+
+- Implement a server as well?

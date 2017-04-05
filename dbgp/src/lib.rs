@@ -25,32 +25,34 @@
 //! This library implements the dbgp protocol
 
 extern crate tokio_io;
-extern crate tokio_core;
+extern crate tokio_service;
+extern crate tokio_proto;
 extern crate futures;
+extern crate bytes;
 
 pub mod escape;
+mod codec;
+mod protocol;
 
-use futures::{Future, Stream};
-use tokio_io::{io, AsyncRead};
-use tokio_io::io::copy;
-use tokio_core::net::TcpListener;
-use tokio_core::reactor::Core;
+use tokio_service::Service;
+use futures::{future, Future, BoxFuture};
+use std::io;
+use tokio_proto::TcpServer;
 use std::net::{IpAddr, SocketAddr, Ipv4Addr};
+use protocol::DbgpProto;
 
-enum Commands {
-    feature_get,
-    feature_set,
-}
+//enum Commands {
+//    feature_get,
+//    feature_set,
+//}
 
 pub struct Session {
-    core: Core,
     address: SocketAddr,
 }
 
 impl Session {
     pub fn new() -> Session {
         Session {
-            core: Core::new().unwrap(),
             address: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127,0,0,1)), 9000),
         }
     }
@@ -65,26 +67,29 @@ impl Session {
         self
     }
 
-    pub fn run(mut self) {
-        let handle = self.core.handle();
-        let socket = TcpListener::bind(&self.address, &handle).unwrap();
-        let server = socket.incoming().for_each(move |(socket, addr)| {
-            let (rx, tx) = socket.split();
-            let amt = copy(rx, tx);
+    pub fn run(self) {
+        let server = TcpServer::new(DbgpProto, self.address);
 
-            let msg = amt.then(move |result| {
-                match result {
-                    Ok((amt, _, _)) => println!("wrote {} bytes to {}", amt, addr),
-                    Err(e) => println!("error on {}: {}", addr, e),
-                }
+        server.serve(|| Ok(Echo));
+    }
+}
 
-                Ok(())
-            });
+pub struct Echo;
 
-            handle.spawn(msg);
+impl Service for Echo {
+    // These types must match the corresponding protocol types:
+    type Request = String;
+    type Response = String;
 
-            Ok(())
-        });
-        self.core.run(server).unwrap();
+    // For non-streaming protocols, service errors are always io::Error
+    type Error = io::Error;
+
+    // The future for computing the response; box it for simplicity.
+    type Future = BoxFuture<Self::Response, Self::Error>;
+
+    // Produce a future for computing a response from a request.
+    fn call(&self, req: Self::Request) -> Self::Future {
+        // In this case, the response is immediate.
+        future::ok(req).boxed()
     }
 }

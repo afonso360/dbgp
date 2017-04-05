@@ -24,7 +24,7 @@
 //#![deny(warnings)]
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]
 
-//! 
+//! Implements the dbgp protocol
 
 extern crate alloc_system;
 extern crate dbgp;
@@ -39,6 +39,9 @@ use std::str;
 /// of the dbgp protocol
 ///
 /// The returning string must be deallocated by calling free()
+/// Failure to allocate memory or a null pointer input will cause
+/// a null pointer to be returned
+/// Strings must be null terminated to be valid
 //TODO: Fix the unwraps
 //TODO: Check how many allocations we are doing with this operation
 #[no_mangle]
@@ -57,9 +60,11 @@ fn dbgp_escape_string(input_str: *const c_char) -> *const c_char {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::ffi::CString;
+    use std::ptr;
+
     #[test]
     fn escape_c_quotes() {
-        use std::ffi::CString;
         let command = CString::new("\"$x[\"a b\"]\"").unwrap();
         let expected_result = "\"$x[\\\"a b\\\"]\"";
 
@@ -72,6 +77,6 @@ mod tests {
 
     #[test]
     fn escape_null_ptr() {
-        assert_eq!(dbgp_escape_string(std::ptr::null()), std::ptr::null());
+        assert_eq!(dbgp_escape_string(ptr::null()), ptr::null());
     }
 }

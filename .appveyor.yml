@@ -59,11 +59,11 @@ install:
 
 build_script:
     - cd dbgp && cargo build --verbose %cargoflags%
-    - cd dbgp_capi && cargo build --verbose %cargoflags%
+    - cd ../dbgp_capi && cargo build --verbose %cargoflags%
 
 test_script:
-    - cd dbgp && cargo test --verbose %cargoflags%
-    - cd dbgp_capi cargo test --verbose %cargoflags%
-    - cd dbgp && cargo doc --verbose %cargoflags%
-    - cd dbgp_capi cargo doc --verbose %cargoflags%
+    - cd ../dbgp && cargo test --verbose %cargoflags%
+    - cd ../dbgp_capi && cargo test --verbose %cargoflags%
+    - cd ../dbgp && cargo doc --verbose %cargoflags%
+    - cd ../dbgp_capi && cargo doc --verbose %cargoflags%
 

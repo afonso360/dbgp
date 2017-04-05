@@ -5,7 +5,7 @@
     - [ ] [Proxy Errors](https://xdebug.org/docs-dbgp.php#id21)
     - [ ] [Proxy Ports](https://xdebug.org/docs-dbgp.php#id22)
 - [ ] [6. Message Packets](https://xdebug.org/docs-dbgp.php#id27)
-  - [ ] [Escaping](https://xdebug.org/docs-dbgp.php#id27)
+  - [x] [Escaping](https://xdebug.org/docs-dbgp.php#id27)
 - [ ] [7. Core Commands](https://xdebug.org/docs-dbgp.php#id39)
   - [ ] [status](https://xdebug.org/docs-dbgp.php#id40)
   - [ ] [Options And Configurations](https://xdebug.org/docs-dbgp.php#id41)

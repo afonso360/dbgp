@@ -20,47 +20,77 @@
 
 //! Implements escapes according to section 6
 
-use std::os::raw::c_char;
-use std::ffi::CString;
-use std::ffi::CStr;
-use std::str;
 
 /// This function escapes a string as defined in
 /// [section 6](https://xdebug.org/docs-dbgp.php#id27)
 /// of the dbgp protocol
 ///
-///
-// TODO: into_raw cannot be used with free
-#[no_mangle]
-pub extern fn dbgp_escape_string(input_str: *const c_char) -> *const c_char {
-    let input = unsafe { CStr::from_ptr(input_str) };
-    let input_buf: &str = str::from_utf8(input.to_bytes()).unwrap();
-    let escaped_string = self::escape(input_buf.to_owned());
-    return CString::new(escaped_string).unwrap().into_raw();
-}
+/// Currently the only defined escape is to escape inner quotes
+// TODO: Consider having a Into<String> as an argument
+// TODO: This is a mess
+// TODO: REDO THIS PLEASE
+pub fn escape(string: String) -> String {
+    let escape_chars = vec!['"', '\''];
+    let mut inside_quotes = ' ';
+    let mut end = String::new();
+    let mut index: usize = 0;
+    let mut last_quote_index: usize = 0;
 
-/// This function actually performs the escapes described in
-/// [dbgp_escape_string](fn.dbgp_escape_string.html)
-pub fn escape<A: Into<String>>(string: A) -> String {
-    string.into().replace("\"", "\\\"")
+    for c in string.chars() {
+        if escape_chars.contains(&c) && inside_quotes != c {
+            inside_quotes = c;
+        } else if escape_chars.contains(&c) && inside_quotes == c {
+            end.push('\\');
+            last_quote_index = index;
+            index += 1;
+        }
+
+        end.push(c);
+        index += 1;
+    }
+
+    if last_quote_index != 0 {
+        end.remove(last_quote_index);
+    }
+    end
 }
 
 
 #[cfg(test)]
 mod tests {
     use escape::escape;
+
     #[test]
-    fn escape_c_quotes() {
-        //use std::ffi::CString;
-        //let command = CString::new("property_get -n \"$x['a b']\" -d 0 -c 0 -p 0").unwrap();
-        //let result = CString::new("property_get -n \\\"$x['a b']\\\" -d 0 -c 0 -p 0").unwrap();
-        //assert_eq!(escape(command.into_raw()), result.into_raw());
+    fn escape_single_quotes() {
+        let command = "'$x['a b']'";
+        let result = "'$x[\\'a b\\']'";
+        assert_eq!(escape(command.to_string()), result);
+    }
+
+    #[test]
+    fn escape_single_quotes_unchanged() {
+        let command = "'$x[\"a b\"]'";
+        let result = "'$x[\"a b\"]'";
+        assert_eq!(escape(command.to_string()), result);
     }
 
     #[test]
     fn escape_quotes() {
-        let command = "property_get -i 5 -n \"$x['a b']\" -d 0 -c 0 -p 0";
-        let result = "property_get -i 5 -n \\\"$x['a b']\\\" -d 0 -c 0 -p 0";
+        let command = "\"$x[\"a b\"]\"";
+        let result = "\"$x[\\\"a b\\\"]\"";
         assert_eq!(escape(command.to_string()), result);
+    }
+
+    #[test]
+    fn escape_inner_single_quotes() {
+        let command = "\"$x['a b']\"";
+        let result = "\"$x['a b']\"";
+        assert_eq!(escape(command.to_string()), result);
+    }
+
+    #[test]
+    fn escape_nothing() {
+        let string = "$x['a b']#$:";
+        assert_eq!(escape(string.to_string()), string);
     }
 }

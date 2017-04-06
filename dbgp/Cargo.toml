@@ -12,6 +12,13 @@ Name reserved for WIP crate
 """
 categories = ["development-tools::debugging"]
 
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "LICENSE",
+]
+
+
 [dependencies]
 base64 = "0.4.1"
 bytes = "0.4.1"

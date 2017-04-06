@@ -11,6 +11,7 @@ description = """
 Name reserved for WIP crate
 """
 categories = ["development-tools::debugging"]
+keywords = ["dbgp", "dbgp-server", "dbgp-client", "c-api"]
 
 include = [
     "**/*.rs",

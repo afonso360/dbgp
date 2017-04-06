@@ -2,8 +2,8 @@
 name = "dbgp_capi"
 version = "0.0.1"
 authors = ["Afonso Bordado <afonsobordado@az8.co>"]
-license-file = "../LICENSE"
-readme = "../README"
+license-file = "LICENSE"
+readme = "README.md"
 
 repository = "https://github.com/afonso360/dbgp"
 

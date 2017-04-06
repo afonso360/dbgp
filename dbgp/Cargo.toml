@@ -1,8 +1,8 @@
 [package]
 authors = ["Afonso Bordado <afonsobordado@az8.co>"]
-license-file = "../LICENSE"
+license-file = "LICENSE"
 name = "dbgp"
-readme = "../README"
+readme = "README.md"
 version = "0.0.1"
 repository = "https://github.com/afonso360/dbgp"
 documentation = "https://docs.rs/dbgp/0.0.1/dbgp"
@@ -16,6 +16,7 @@ include = [
     "**/*.rs",
     "Cargo.toml",
     "LICENSE",
+    "README.md",
 ]
 
 

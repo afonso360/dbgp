@@ -9,6 +9,9 @@ documentation = "https://docs.rs/dbgp/0.0.1/dbgp"
 homepage = "https://github.com/afonso360/dbgp"
 description = """
 Name reserved for WIP crate
+
+This crate is licensed under the GPL v2 with a Linking Exception
+See LICENSE for details
 """
 categories = ["development-tools::debugging"]
 keywords = ["dbgp", "dbgp-server", "dbgp-client", "c-api"]

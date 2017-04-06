@@ -4,6 +4,13 @@ license-file = "../LICENSE"
 name = "dbgp"
 readme = "../README"
 version = "0.0.1"
+repository = "https://github.com/afonso360/dbgp"
+documentation = "https://docs.rs/dbgp/0.0.1/dbgp"
+homepage = "https://github.com/afonso360/dbgp"
+description = """
+Name reserved for WIP crate
+"""
+categories = ["development-tools::debugging"]
 
 [dependencies]
 base64 = "0.4.1"

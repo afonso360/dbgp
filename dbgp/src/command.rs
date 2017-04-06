@@ -50,6 +50,8 @@ pub enum RedirectionType {
 
 // Change all files to URI? or is there a filename and file URI
 pub enum Command {
+    ProxyInit { port: u32, ide_key: String, multi_debug: Option<bool> },
+    ProxyStop { ide_key: String },
     Status,
     FeatureGet{ name: String },
     FeatureSet{ name: String, value: String },
@@ -149,12 +151,10 @@ pub enum Command {
         state: Option<SpawnpointState>,
     },
     SpawnpointGet { id: u32 },
-    SpawnpointUpdate {
-        lineno: Option<u32>,
-        state: Option<SpawnpointState>,
-    },
+    SpawnpointUpdate { lineno: Option<u32>, state: Option<SpawnpointState> },
     SpawnpointRemove { id: u32 },
     SpawnpointList,
 
     Interact { mode: u32 },
+
 }

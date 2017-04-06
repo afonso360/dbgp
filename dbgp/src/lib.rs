@@ -36,7 +36,8 @@ pub mod escape;
 mod codec;
 mod protocol;
 mod error_codes;
-mod commands;
+mod command;
+mod transaction;
 
 use tokio_service::Service;
 use futures::{future, Future, BoxFuture};
@@ -53,12 +54,19 @@ lazy_static! {
 
 static DEFAULT_PORT: u16 = 9000;
 
+enum BreakReason {
+    Ok,
+    Error,
+    Aborted,
+    Exception,
+}
+
 enum SessionStatus {
     Starting,
     Stopping,
     Stopped,
     Running,
-    Break,
+    Break(BreakReason),
 }
 
 /// Represents a session with a debugger

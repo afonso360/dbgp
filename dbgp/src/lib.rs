@@ -31,6 +31,7 @@ extern crate tokio_proto;
 extern crate futures;
 extern crate bytes;
 extern crate base64;
+extern crate itertools;
 
 pub mod escape;
 mod protocol;

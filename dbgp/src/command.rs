@@ -22,6 +22,7 @@ use base64;
 use command::Command::*;
 use escape;
 use std::fmt;
+use itertools::Itertools;
 
 // TODO: Can we merge spawnpoints with breakpoints?
 
@@ -170,76 +171,75 @@ pub enum Command {
 impl Command {
     pub fn get_name(&self) -> String {
         match *self {
-            ProxyInit{..} => "proxyinit".to_string(),
-            ProxyStop{..} => "proxystop".to_string(),
-            Status => "status".to_string(),
-            FeatureGet{..} => "feature_get".to_string(),
-            FeatureSet{..} => "feature_set".to_string(),
-            Run => "run".to_string(),
-            StepInto => "step_into".to_string(),
-            StepOver => "step_over".to_string(),
-            StepOut => "step_out".to_string(),
-            Stop => "stop".to_string(),
-            Detach => "detach".to_string(),
-            BreakpointSet{..} => "breakpoint_set".to_string(),
-            BreakpointGet{..} => "breakpoint_get".to_string(),
-            BreakpointUpdate{..} => "breakpoint_update".to_string(),
-            BreakpointRemove{..} => "breakpoint_remove".to_string() ,
-            BreapointList => "breapoint_list".to_string(),
-            StackDepth => "stack_depth".to_string(),
-            StackGet{..} => "stack_get".to_string() ,
-            ContextNames{..} => "context_names".to_string() ,
-            ContextGet{..} => "contextget".to_string(),
-            TypeMapGet => "typemap_get".to_string(),
-            PropertyGet{..} => "property_get".to_string(),
-            PropertySet{..} => "property_set".to_string(),
-            PropertyValue{..} => "property_value".to_string(),
-            Source{..} => "source".to_string(),
-            StdOut{..} => "stdout".to_string(),
-            StdErr{..} => "stderr".to_string(),
-            StdIn{..} => "stdin".to_string(),
-            Break => "break".to_string(),
-            Eval{..} => "eval".to_string(),
-            Expr => "expr".to_string(),
-            Exec => "exec".to_string(),
-            SpawnpointSet{..} => "spawnpoint_set".to_string(),
-            SpawnpointGet{..} => "spawnpoint_get".to_string(),
-            SpawnpointUpdate{..} => "spawnpoint_update".to_string(),
-            SpawnpointRemove{..} => "spawnpoint_remove".to_string(),
-            SpawnpointList => "spawnpoint_list".to_string(),
-            Interact{..} => "interact".to_string(),
-        }
+            ProxyInit{..} => "proxyinit",
+            ProxyStop{..} => "proxystop",
+            Status => "status",
+            FeatureGet{..} => "feature_get",
+            FeatureSet{..} => "feature_set",
+            Run => "run",
+            StepInto => "step_into",
+            StepOver => "step_over",
+            StepOut => "step_out",
+            Stop => "stop",
+            Detach => "detach",
+            BreakpointSet{..} => "breakpoint_set",
+            BreakpointGet{..} => "breakpoint_get",
+            BreakpointUpdate{..} => "breakpoint_update",
+            BreakpointRemove{..} => "breakpoint_remove" ,
+            BreapointList => "breapoint_list",
+            StackDepth => "stack_depth",
+            StackGet{..} => "stack_get" ,
+            ContextNames{..} => "context_names" ,
+            ContextGet{..} => "contextget",
+            TypeMapGet => "typemap_get",
+            PropertyGet{..} => "property_get",
+            PropertySet{..} => "property_set",
+            PropertyValue{..} => "property_value",
+            Source{..} => "source",
+            StdOut{..} => "stdout",
+            StdErr{..} => "stderr",
+            StdIn{..} => "stdin",
+            Break => "break",
+            Eval{..} => "eval",
+            Expr => "expr",
+            Exec => "exec",
+            SpawnpointSet{..} => "spawnpoint_set",
+            SpawnpointGet{..} => "spawnpoint_get",
+            SpawnpointUpdate{..} => "spawnpoint_update",
+            SpawnpointRemove{..} => "spawnpoint_remove",
+            SpawnpointList => "spawnpoint_list",
+            Interact{..} => "interact",
+        }.to_string()
     }
 
     pub fn build_command_string(&self, transaction_id: u32) -> String {
-        format!("{} -i {} {}", self.get_name(), transaction_id,
-        match *self {
+        let rest = match *self {
             TypeMapGet | Break | Status | SpawnpointList |
                 BreapointList | StackDepth | Run | StepInto |
-                StepOver | StepOut | Stop | Detach => "".to_string(),
+                StepOver | StepOut | Stop | Detach => vec![],
 
             ProxyInit { port: p, ide_key: ref i, multi_debug: ref m } =>
-                format!("{} {} {}",
-                        p.format_flag('a'),
-                        i.format_flag('k'),
-                        m.format_flag('m')),
+                vec![p.format_flag('a'),
+                i.format_flag('k'),
+                m.format_flag('m')],
 
-            ProxyStop { ide_key: ref i } => i.format_flag('k'),
-            FeatureGet{ name: ref n } => n.format_flag('n'),
+            ProxyStop { ide_key: ref i } => vec![i.format_flag('k')],
+            FeatureGet{ name: ref n } => vec![n.format_flag('n')],
             FeatureSet{ name: ref n, value: ref v } =>
-                format!("{} {}",
-                        n.format_flag('n'),
-                        v.format_flag('v')),
+                vec![n.format_flag('n'), v.format_flag('v')],
 
-            BreakpointSet{ btype: ref bt, state: ref s, hit_value: ref hv, temporary: ref t } =>
-                format!("{} {} {} {}",
-                        hv.format_flag('h'),
-                        t.format_flag('r'),
-                        s.format_flag('s'),
-                        bt.format_flag('t')),
+            BreakpointSet{
+                btype: ref bt,
+                state: ref s,
+                hit_value: ref hv,
+                temporary: ref t
+            } => vec![hv.format_flag('h'),
+                t.format_flag('r'),
+                s.format_flag('s'),
+                bt.format_flag('t')],
 
             BreakpointRemove { breakpoint_id: bid } |
-                BreakpointGet { breakpoint_id: bid } => bid.format_flag('d'),
+                BreakpointGet { breakpoint_id: bid } => vec![bid.format_flag('d')],
 
             BreakpointUpdate{
                 breakpoint_id: bid,
@@ -247,17 +247,17 @@ impl Command {
                 lineno: line,
                 hit_value: hv,
                 hit_condition: ref hc,
-            } => format!("{} {} {} {} {}",
-                         bid.format_flag('d'),
-                         s.format_flag('s'),
-                         line.format_flag('n'),
-                         hv.format_flag('h'),
-                         hc.format_flag('o')),
+            } => vec![bid.format_flag('d'),
+                s.format_flag('s'),
+                line.format_flag('n'),
+                hv.format_flag('h'),
+                hc.format_flag('o')],
+
             StackGet { stack_depth: sd } |
-                ContextNames { stack_depth: sd } => sd.format_flag('d'),
+                ContextNames { stack_depth: sd } => vec![sd.format_flag('d')],
 
             ContextGet{ stack_depth: sd, context_id: ci } =>
-                format!("{} {}", sd.format_flag('d'), ci.format_flag('c')),
+                vec![sd.format_flag('d'), ci.format_flag('c')],
 
             PropertyGet {
                 stack_depth: sd,
@@ -266,13 +266,12 @@ impl Command {
                 max_data: md,
                 data_page: ref dp,
                 property_key: pk,
-            } => format!("{} {} {} {} {} {}",
-                         pln.format_flag('n'),
-                         sd.format_flag('d'),
-                         ci.format_flag('c'),
-                         md.format_flag('m'),
-                         dp.format_flag('p'),
-                         pk.format_flag('k')),
+            } => vec![pln.format_flag('n'),
+                sd.format_flag('d'),
+                ci.format_flag('c'),
+                md.format_flag('m'),
+                dp.format_flag('p'),
+                pk.format_flag('k')],
 
             PropertySet {
                 stack_depth: sd,
@@ -281,13 +280,12 @@ impl Command {
                 max_data: md,
                 data_type: ref dt,
                 property_address: pa,
-            } => format!("{} {} {} {} {} {}",
-                         pln.format_flag('n'),
-                         sd.format_flag('d'),
-                         ci.format_flag('c'),
-                         md.format_flag('m'),
-                         dt.format_flag('t'),
-                         pa.format_flag('a')),
+            } => vec![ pln.format_flag('n'),
+                sd.format_flag('d'),
+                ci.format_flag('c'),
+                md.format_flag('m'),
+                dt.format_flag('t'),
+                pa.format_flag('a')],
 
             PropertyValue {
                 stack_depth: sd,
@@ -297,50 +295,51 @@ impl Command {
                 data_page: ref dp,
                 property_address: pa,
                 property_key: pk,
-            } => format!("{} {} {} {} {} {} {}",
-                         pln.format_flag('n'),
-                         sd.format_flag('d'),
-                         ci.format_flag('c'),
-                         md.format_flag('m'),
-                         dp.format_flag('p'),
-                         pa.format_flag('a'),
-                         pk.format_flag('k')),
+            } => vec![ pln.format_flag('n'),
+                sd.format_flag('d'),
+                ci.format_flag('c'),
+                md.format_flag('m'),
+                dp.format_flag('p'),
+                pa.format_flag('a'),
+                pk.format_flag('k')],
 
             Source { begin_line: bl, end_line: el, file_uri: ref fu, } =>
-                format!("{} {} {}",
-                         bl.format_flag('f'),
-                         el.format_flag('n'),
-                         fu.format_flag('s')),
+                vec![bl.format_flag('f'), el.format_flag('n'), fu.format_flag('s')],
 
-            StdOut { rediretion_type: ref rt } => rt.format_flag('c'),
-            StdErr { rediretion_type: ref rt } => rt.format_flag('c'),
+            StdOut { rediretion_type: ref rt } |
+                StdErr { rediretion_type: ref rt } => vec![rt.format_flag('c')],
+
             StdIn { redirect: r, data: ref data } =>
-                format!("{} {}", r.format_flag('c'), match *data {
+                vec![r.format_flag('c'),
+                match *data {
                     Some(ref s) => format!("-- {}", base64::encode(s.as_bytes())),
                     None => "".to_string(),
-                }),
-            Eval { stack_depth: sd, data_page: ref dp } =>
-                format!("{} {}", sd.format_flag('d'), dp.format_flag('p')),
+                }],
 
-            Expr => "".to_string(),
-            Exec => "".to_string(),
+            Eval { stack_depth: sd, data_page: ref dp } =>
+                vec![sd.format_flag('d'), dp.format_flag('p')],
+
+            Expr | Exec=> vec![],
 
             SpawnpointSet {
                 filename: ref file,
                 lineno: line,
                 state: ref state,
-            } => format!("{} {} {}",
-                         file.format_flag('f'),
-                         line.format_flag('n'),
-                         state.format_flag('s')),
+            } => vec![file.format_flag('f'),
+                line.format_flag('n'),
+                state.format_flag('s')],
 
             SpawnpointRemove { id: i } | SpawnpointGet { id: i } |
-                SpawnpointRemove { id: i } => i.format_flag('i'),
+                SpawnpointRemove { id: i } => vec![i.format_flag('i')],
 
             SpawnpointUpdate { lineno: line, state: ref state } =>
-                format!("{} {}", line.format_flag('n'), state.format_flag('s')),
-            Interact { mode: m } => m.format_flag('m'),
-        })
+                vec![ line.format_flag('n'), state.format_flag('s') ],
+            Interact { mode: m } => vec![m.format_flag('m')],
+        }.iter()
+         .intersperse(&" ".to_string())
+         .join("");
+
+        format!("{} -i {} {}", self.get_name(), transaction_id, rest)
     }
 }
 
@@ -430,5 +429,22 @@ impl ToFlag for BreakpointType {
             BreakpointType::Watch{ expression: ref exp } =>
                 format!("watch -- {}", base64::encode(exp.as_bytes())),
         })
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use command::Command;
+
+    #[test]
+    fn test_command() {
+        let c = Command::ProxyInit {
+            port: 9100,
+            ide_key: "ied_caslc".to_string(),
+            multi_debug: Some(true),
+        };
+        assert_eq!(c.build_command_string(10),
+            "proxyinit -i 10 -a 9100 -k ied_caslc -m 1".to_string());
     }
 }

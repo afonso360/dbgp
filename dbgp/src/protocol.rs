@@ -85,7 +85,7 @@ impl Encoder for DbgpClientCodec {
 
 #[cfg(test)]
 mod tests {
-    use codec::DbgpClientCodec;
+    use protocol::DbgpClientCodec;
     use bytes::{BytesMut, BufMut};
     use tokio_io::codec::{Encoder, Decoder};
 

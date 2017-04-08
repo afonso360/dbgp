@@ -76,6 +76,18 @@ mod interact;
 mod notifications;
 mod stdin;
 mod flag;
+mod status;
+mod proxy;
+mod feature;
+mod continuation;
+mod io;
+mod source;
+mod stack;
+mod context;
+mod typemap;
+mod property;
+mod breakpoint;
+
 
 pub trait Response {}
 

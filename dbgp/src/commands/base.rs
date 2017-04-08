@@ -24,6 +24,7 @@ use escape;
 use std::fmt;
 use itertools::Itertools;
 
+// TODO: Make command a trait
 // TODO: Can we merge spawnpoints with breakpoints?
 
 pub enum BreakpointType {
@@ -39,12 +40,6 @@ pub enum BreakpointState {
     Enabled,
     Disabled
 }
-
-pub enum SpawnpointState {
-    Enabled,
-    Disabled
-}
-
 pub enum RedirectionType {
     /// stdout/stderr output goes to regular place, but not to Debug Client
     Disable,
@@ -53,6 +48,8 @@ pub enum RedirectionType {
     /// stdout/stderr output goes to Debug Client only.
     Redirect
 }
+
+
 
 // Change all files to URI? or is there a filename and file URI
 pub enum Command {
@@ -103,8 +100,7 @@ pub enum Command {
         max_data: Option<u32>,
 
         /// Optional for arras, hashes objects, etc
-        //TODO: is this a string?
-        data_page: Option<String>,
+        data_page: Option<u32>,
         property_key: Option<u32>,
     },
     PropertySet {
@@ -127,8 +123,7 @@ pub enum Command {
         max_data: Option<u32>,
 
         /// Optional for arras, hashes objects, etc
-        //TODO: is this a string?
-        data_page: Option<String>,
+        data_page: Option<u32>,
 
         property_address: Option<u32>,
         property_key: Option<u32>,
@@ -137,34 +132,6 @@ pub enum Command {
     StdOut { rediretion_type: RedirectionType },
     StdErr { rediretion_type: RedirectionType },
 
-    //Extended commands
-    StdIn {
-        redirect: bool,
-        data: Option<String>,
-    },
-    Break,
-    Eval {
-        stack_depth: Option<u32>,
-
-        /// Optional for arras, hashes objects, etc
-        //TODO: is this a string?
-        data_page: Option<String>,
-    },
-    //TODO: Check this
-    Expr,
-    Exec,
-
-    SpawnpointSet {
-        filename: Option<String>,
-        lineno: Option<u32>,
-        state: Option<SpawnpointState>,
-    },
-    SpawnpointGet { id: u32 },
-    SpawnpointUpdate { lineno: Option<u32>, state: Option<SpawnpointState> },
-    SpawnpointRemove { id: u32 },
-    SpawnpointList,
-
-    Interact { mode: u32 },
 
 }
 
@@ -198,23 +165,13 @@ impl Command {
             Source{..} => "source",
             StdOut{..} => "stdout",
             StdErr{..} => "stderr",
-            StdIn{..} => "stdin",
             Break => "break",
-            Eval{..} => "eval",
-            Expr => "expr",
-            Exec => "exec",
-            SpawnpointSet{..} => "spawnpoint_set",
-            SpawnpointGet{..} => "spawnpoint_get",
-            SpawnpointUpdate{..} => "spawnpoint_update",
-            SpawnpointRemove{..} => "spawnpoint_remove",
-            SpawnpointList => "spawnpoint_list",
-            Interact{..} => "interact",
         }.to_string()
     }
 
     pub fn build_command_string(&self, transaction_id: u32) -> String {
         let rest = match *self {
-            TypeMapGet | Break | Status | SpawnpointList |
+            TypeMapGet | Status |
                 BreapointList | StackDepth | Run | StepInto |
                 StepOver | StepOut | Stop | Detach => vec![],
 
@@ -308,130 +265,12 @@ impl Command {
 
             StdOut { rediretion_type: ref rt } |
                 StdErr { rediretion_type: ref rt } => vec![rt.format_flag('c')],
-
-            StdIn { redirect: r, data: ref data } =>
-                vec![r.format_flag('c'),
-                match *data {
-                    Some(ref s) => format!("-- {}", base64::encode(s.as_bytes())),
-                    None => "".to_string(),
-                }],
-
-            Eval { stack_depth: sd, data_page: ref dp } =>
-                vec![sd.format_flag('d'), dp.format_flag('p')],
-
-            Expr | Exec=> vec![],
-
-            SpawnpointSet {
-                filename: ref file,
-                lineno: line,
-                state: ref state,
-            } => vec![file.format_flag('f'),
-                line.format_flag('n'),
-                state.format_flag('s')],
-
-            SpawnpointRemove { id: i } | SpawnpointGet { id: i } |
-                SpawnpointRemove { id: i } => vec![i.format_flag('i')],
-
-            SpawnpointUpdate { lineno: line, state: ref state } =>
-                vec![ line.format_flag('n'), state.format_flag('s') ],
-            Interact { mode: m } => vec![m.format_flag('m')],
         }.iter()
-         .intersperse(&" ".to_string())
-         .join("");
+         .join(" ");
 
         format!("{} -i {} {}", self.get_name(), transaction_id, rest)
     }
 }
-
-trait ToFlag {
-    fn format_flag(&self, flag: char) -> String;
-}
-
-// TODO: Refactor this once the bug has been fixed
-// We could use Specialization here but rust has a bug
-// https://github.com/rust-lang/rust/issues/41140
-
-impl ToFlag for u32 {
-    fn format_flag(&self, flag: char) -> String {
-        format!("-{} {}", flag, *self)
-    }
-}
-
-impl<T> ToFlag for Option<T>
-    where T: ToFlag {
-    fn format_flag(&self, flag: char) -> String {
-        match *self {
-            Some(ref s) => s.format_flag(flag),
-            None => "".to_string(),
-        }
-    }
-}
-
-
-impl ToFlag for String {
-    fn format_flag(&self, flag: char) -> String {
-        format!("-{} {}", flag, escape::escape(self.clone()))
-    }
-}
-
-
-impl ToFlag for bool {
-    fn format_flag(&self, flag: char) -> String {
-        match *self {
-            true => format!("-{} 1", flag),
-            false => format!("-{} 0", flag),
-        }
-    }
-}
-
-impl ToFlag for SpawnpointState {
-    fn format_flag(&self, flag: char) -> String {
-        match *self {
-            SpawnpointState::Enabled => format!("-{} enabled", flag),
-            SpawnpointState::Disabled => format!("-{} disabled", flag),
-        }
-    }
-}
-
-impl ToFlag for RedirectionType {
-    fn format_flag(&self, flag: char) -> String {
-        match *self {
-            RedirectionType::Disable => format!("-{} 0", flag),
-            RedirectionType::Copy => format!("-{} 1", flag),
-            RedirectionType::Redirect => format!("-{} 2", flag),
-        }
-    }
-}
-
-impl ToFlag for BreakpointState {
-    fn format_flag(&self, flag: char) -> String {
-        match *self {
-            BreakpointState::Enabled => format!("-{} enabled", flag),
-            BreakpointState::Disabled => format!("-{} disabled", flag),
-        }
-    }
-}
-
-
-impl ToFlag for BreakpointType {
-    fn format_flag(&self, flag: char) -> String {
-        format!("-{} {}", flag, match *self {
-            BreakpointType::Line{ filename: ref f, lineno: ref l } =>
-                format!("line -f {} -l {}", f, l),
-            BreakpointType::Call{ function: ref m } =>
-                format!("call -m {}", m),
-            BreakpointType::Return{ function: ref m } =>
-                format!("return -m {}", m),
-            BreakpointType::Exception{ exception: ref x } =>
-                format!("exception -x {}", x),
-            BreakpointType::Conditional{ expression: ref exp, filename: ref f } =>
-                format!("conditional -f {} -- {}", f, base64::encode(exp.as_bytes())),
-            BreakpointType::Watch{ expression: ref exp } =>
-                format!("watch -- {}", base64::encode(exp.as_bytes())),
-        })
-    }
-}
-
 
 #[cfg(test)]
 mod tests {

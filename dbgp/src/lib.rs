@@ -31,13 +31,13 @@ extern crate tokio_proto;
 extern crate futures;
 extern crate bytes;
 extern crate base64;
-extern crate itertools;
+extern crate xml;
 
 pub mod escape;
 mod protocol;
 mod error_codes;
-mod command;
-mod transaction;
+mod commands;
+//mod transaction;
 
 use tokio_service::Service;
 use futures::{future, Future, BoxFuture};

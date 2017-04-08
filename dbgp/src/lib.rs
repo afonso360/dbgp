@@ -26,6 +26,7 @@
 #[macro_use]
 extern crate lazy_static;
 extern crate tokio_io;
+extern crate tokio_core;
 extern crate tokio_service;
 extern crate tokio_proto;
 extern crate futures;
@@ -39,11 +40,13 @@ mod error_codes;
 mod commands;
 //mod transaction;
 
+use tokio_core::reactor::Handle;
 use tokio_service::Service;
 use futures::{future, Future, BoxFuture};
 use std::io;
-use tokio_proto::TcpServer;
+use tokio_proto::{TcpClient, TcpServer};
 use std::net::{IpAddr, SocketAddr, Ipv4Addr};
+use protocol::client_codec::DbgpClientCodec;
 use protocol::DbgpProto;
 
 lazy_static! {
@@ -100,19 +103,27 @@ impl Session {
 struct Dbgp;
 
 impl Dbgp {
-    pub fn connect_ssl(address: SocketAddr) -> Session {
+    pub fn connect_ssl(address: SocketAddr, handle: &Handle) -> Session {
         unimplemented!();
     }
 
-    pub fn connect(address: SocketAddr) -> Session {
-        Session::new(address, SessionType::Client)
+    pub fn connect(address: SocketAddr, handle: &Handle) ->
+        Box<Future<Item = Session, Error = io::Error>> {
+        unimplemented!();
+        //    let ret = TcpClient::new(DbgpProto)
+        //        .connect(address, handle)
+        //        .map(|client_proxy| {
+        //            Session::new(address, SessionType::Client)
+        //        });
+
+        //    Box::new(ret)
     }
 
-    pub fn serve_ssl(address: SocketAddr) -> Session {
+    pub fn serve_ssl(address: SocketAddr, handle: &Handle) -> Session {
         unimplemented!();
     }
 
-    pub fn serve(address: SocketAddr) -> Session {
+    pub fn serve(address: SocketAddr, handle: &Handle) -> Session {
         Session::new(address, SessionType::Server)
     }
 }

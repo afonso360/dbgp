@@ -83,6 +83,7 @@ impl Encoder for DbgpClientCodec {
     }
 }
 
+
 #[cfg(test)]
 mod tests {
     use protocol::DbgpClientCodec;
@@ -137,24 +138,5 @@ mod tests {
 
         codec.encode(command.to_owned().clone(), &mut dest_buf);
         assert_eq!(dest_buf, BytesMut::from(format!("{}\n", command.clone())));
-    }
-
-
-}
-
-pub struct DbgpProto;
-
-impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for DbgpProto {
-    /// For this protocol style, `Request` matches the codec `In` type
-    type Request = String;
-
-    /// For this protocol style, `Response` matches the coded `Out` type
-    type Response = String;
-
-    /// A bit of boilerplate to hook in the codec:
-    type Transport = Framed<T, DbgpClientCodec>;
-    type BindTransport = Result<Self::Transport, io::Error>;
-    fn bind_transport(&self, io: T) -> Self::BindTransport {
-        Ok(io.framed(DbgpClientCodec))
     }
 }

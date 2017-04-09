@@ -21,7 +21,8 @@
 pub mod client_codec;
 //pub mod server_codec;
 
-use protocol::client_codec::DbgpClientCodec;
+//pub use protocol::server_codec::ServerCodec;
+pub use protocol::client_codec::ClientCodec;
 use tokio_proto::pipeline::ServerProto; //TODO: Change this to multiplexed
 use tokio_io::{AsyncRead, AsyncWrite};
 use std::{str, io};
@@ -31,17 +32,13 @@ use tokio_io::codec::{Encoder, Framed, Decoder};
 pub struct DbgpProto;
 
 impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for DbgpProto {
-    /// For this protocol style, `Request` matches the codec `In` type
     type Request = String;
-
-    /// For this protocol style, `Response` matches the coded `Out` type
     type Response = String;
-
-    /// A bit of boilerplate to hook in the codec:
-    type Transport = Framed<T, DbgpClientCodec>;
+    type Transport = Framed<T, ClientCodec>;
     type BindTransport = Result<Self::Transport, io::Error>;
+
     fn bind_transport(&self, io: T) -> Self::BindTransport {
-        Ok(io.framed(DbgpClientCodec))
+        Ok(io.framed(ClientCodec))
     }
 }
 

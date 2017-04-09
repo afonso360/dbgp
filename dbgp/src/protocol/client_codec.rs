@@ -18,15 +18,16 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+
 use tokio_proto::pipeline::ServerProto; //TODO: Change this to multiplexed
 use tokio_io::{AsyncRead, AsyncWrite};
 use std::{str, io};
 use bytes::BytesMut;
 use tokio_io::codec::{Encoder, Framed, Decoder};
 
-pub struct DbgpClientCodec;
+pub struct ClientCodec;
 
-impl Decoder for DbgpClientCodec {
+impl Decoder for ClientCodec {
     type Item = String; // TODO: change to XML
     type Error = io::Error;
 
@@ -72,7 +73,7 @@ impl Decoder for DbgpClientCodec {
     }
 }
 
-impl Encoder for DbgpClientCodec {
+impl Encoder for ClientCodec {
     type Item = String;
     type Error = io::Error;
 
@@ -86,13 +87,13 @@ impl Encoder for DbgpClientCodec {
 
 #[cfg(test)]
 mod tests {
-    use protocol::DbgpClientCodec;
+    use protocol::ClientCodec;
     use bytes::{BytesMut, BufMut};
     use tokio_io::codec::{Encoder, Decoder};
 
     #[test]
     fn codec_decode_correct_packet() {
-        let mut codec = DbgpClientCodec;
+        let mut codec = ClientCodec;
         let mut packet = BytesMut::from("4\nalcs\n");
 
         let d = codec.decode(&mut packet);
@@ -101,7 +102,7 @@ mod tests {
 
     #[test]
     fn codec_decode_incomplete_packet() {
-        let mut codec = DbgpClientCodec;
+        let mut codec = ClientCodec;
         let mut packet = BytesMut::from("4\nalcn");
 
         let d = codec.decode(&mut packet);
@@ -110,7 +111,7 @@ mod tests {
 
     #[test]
     fn codec_decode_incomplete_packet_length() {
-        let mut codec = DbgpClientCodec;
+        let mut codec = ClientCodec;
         let mut packet = BytesMut::from("4");
 
         let d = codec.decode(&mut packet);
@@ -122,7 +123,7 @@ mod tests {
     /// This test is just to make sure that if the length is wrong
     /// we don't try to use the packet
     fn codec_decode_wrong_length() {
-        let mut codec = DbgpClientCodec;
+        let mut codec = ClientCodec;
         let mut packet = BytesMut::from("2\nalcn\n");
 
         let d = codec.decode(&mut packet);
@@ -132,7 +133,7 @@ mod tests {
 
     #[test]
     fn codec_encode_packet() {
-        let mut codec = DbgpClientCodec;
+        let mut codec = ClientCodec;
         let command = "command -a 10 -- aoysckuasjhkadhad";
         let mut dest_buf = BytesMut::with_capacity(command.len());
 

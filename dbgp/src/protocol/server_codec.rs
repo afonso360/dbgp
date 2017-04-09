@@ -25,9 +25,9 @@ use bytes::BytesMut;
 use tokio_io::codec::{Encoder, Framed, Decoder};
 
 
-pub struct DbgpServerCodec;
+pub struct ServerCodec;
 
-impl Decoder for DbgpServerCodec {
+impl Decoder for ServerCodec {
     type Item = String; // TODO: change to XML
     type Error = io::Error;
 
@@ -73,11 +73,13 @@ impl Decoder for DbgpServerCodec {
     }
 }
 
-impl Encoder for DbgpServerCodec {
+impl Encoder for ServerCodec {
     type Item = String;
     type Error = io::Error;
 
     fn encode(&mut self, msg: String, buf: &mut BytesMut) -> io::Result<()> {
+        buf.extend(msg.length().as_bytes());
+        buf.extend(b"\n");
         buf.extend(msg.as_bytes());
         buf.extend(b"\n");
         Ok(())

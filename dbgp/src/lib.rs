@@ -46,7 +46,7 @@ use futures::{future, Future, BoxFuture};
 use std::io;
 use tokio_proto::{TcpClient, TcpServer};
 use std::net::{IpAddr, SocketAddr, Ipv4Addr};
-use protocol::client_codec::DbgpClientCodec;
+use protocol::client_codec::ClientCodec;
 use protocol::DbgpProto;
 
 lazy_static! {
@@ -119,11 +119,17 @@ impl Dbgp {
         //    Box::new(ret)
     }
 
-    pub fn serve_ssl(address: SocketAddr, handle: &Handle) -> Session {
+    /// This method will block the current thread until the server is shut down.
+    pub fn serve_ssl(address: SocketAddr, handle: &Handle) {
         unimplemented!();
     }
 
-    pub fn serve(address: SocketAddr, handle: &Handle) -> Session {
-        Session::new(address, SessionType::Server)
+    /// This method will block the current thread until the server is shut down.
+    pub fn serve(address: SocketAddr) {
+        unimplemented!();
+        //TcpServer::new(DbgpProto, address)
+        //    .serve(|h: &Handle| {
+        //        Session::new(address, SessionType::Server, h)
+        //    })
     }
 }

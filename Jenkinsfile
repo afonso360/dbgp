@@ -1,26 +1,41 @@
 
-node('master') {
-        try {
-            stage 'Checkout'
-                checkout scm
-            stage 'Version Check'
-                sh 'rustc --version'
-                sh 'cargo --version'
-            stage 'Build dbgp'
-                sh '(cd dbgp && nix-shell --run "cargo build --verbose")'
-            stage 'Test dbgp'
-                sh '(cd dbgp && nix-shell --run "cargo test --verbose")'
-            stage 'Doc dbgp'
-                sh '(cd dbgp && nix-shell --run "cargo doc --verbose")'
-            stage 'Build dbgp-capi'
-                sh '(cd dbgp_capi && nix-shell --run "cargo build --verbose")'
-            stage 'Test dbgp-capi'
-                sh '(cd dbgp_capi && nix-shell --run "cargo test --verbose")'
-            stage 'Doc dbgp-capi'
-                sh '(cd dbgp_capi && nix-shell --run "cargo doc --verbose")'
-            currentBuild.result = "SUCCESS"
-        } catch (err) {
-            currentBuild.result = "FAILURE"
-            throw err
-        }
+
+def branches = [:]
+def names = nodeNames();
+
+for (int i = 0; i < names.size(); i++) {
+	def nodeName = names[i];
+	branches["node(" + nodeName + ")"] = {
+		node(nodeName) {
+			stage('Checkout') {
+				checkout scm;
+			}
+			stage('Version') {
+				sh 'rustc --version';
+				sh 'cargo --version';
+			}
+			stage('Build') {
+				sh '(cd dbgp && cargo build --verbose)';
+				sh '(cd dbgp_capi && cargo build --verbose)';
+			}
+			stage('Test') {
+				sh '(cd dbgp && cargo test --verbose)';
+				sh '(cd dbgp_capi && cargo test --verbose)';
+			}
+			stage('Doc') {
+				sh '(cd dbgp && cargo doc --verbose)';
+				sh '(cd dbgp_capi && cargo doc --verbose)';
+			}
+		}
+	}
 }
+
+// Now we trigger all branches
+parallel branches
+
+// This method collects a list of Node names from the current Jenkins instance
+@NonCPS
+def nodeNames() {
+	return jenkins.model.Jenkins.instance.nodes.collect { node -> node.name }
+}
+

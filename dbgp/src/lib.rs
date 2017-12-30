@@ -25,29 +25,17 @@
 
 #[macro_use]
 extern crate lazy_static;
-extern crate tokio_io;
-extern crate tokio_core;
-extern crate tokio_service;
-extern crate tokio_proto;
-extern crate futures;
 extern crate bytes;
 extern crate base64;
 extern crate xml;
 
 pub mod escape;
-mod protocol;
 mod error_codes;
 mod commands;
 //mod transaction;
 
-use tokio_core::reactor::Handle;
-use tokio_service::Service;
-use futures::{future, Future, BoxFuture};
 use std::io;
-use tokio_proto::{TcpClient, TcpServer};
 use std::net::{IpAddr, SocketAddr, Ipv4Addr};
-use protocol::client_codec::ClientCodec;
-use protocol::DbgpProto;
 
 lazy_static! {
     static ref DEFAULT_IP_ADDR: Ipv4Addr = {
@@ -103,12 +91,11 @@ impl Session {
 struct Dbgp;
 
 impl Dbgp {
-    pub fn connect_ssl(address: SocketAddr, handle: &Handle) -> Session {
+    pub fn connect_ssl(address: SocketAddr) -> Session {
         unimplemented!();
     }
 
-    pub fn connect(address: SocketAddr, handle: &Handle) ->
-        Box<Future<Item = Session, Error = io::Error>> {
+    pub fn connect(address: SocketAddr) -> Result<Session, io::Error> {
         unimplemented!();
         //    let ret = TcpClient::new(DbgpProto)
         //        .connect(address, handle)
@@ -120,7 +107,7 @@ impl Dbgp {
     }
 
     /// This method will block the current thread until the server is shut down.
-    pub fn serve_ssl(address: SocketAddr, handle: &Handle) {
+    pub fn serve_ssl(address: SocketAddr) {
         unimplemented!();
     }
 

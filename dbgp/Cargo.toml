@@ -25,11 +25,11 @@ include = [
 
 
 [dependencies]
-base64 = "0.4.1"
-bytes = "0.4.1"
-lazy_static = "0.2.6"
-url = "1.4.0"
-xml-rs = "0.4.1"
+base64 = "0.9"
+bytes = "0.4"
+lazy_static = "1.0"
+url = "1.6"
+xml-rs = "0.7"
 
 [lib]
 crate-type = ["rlib", "dylib"]

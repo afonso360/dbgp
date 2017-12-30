@@ -4,17 +4,17 @@ environment:
   matrix:
 ### MSVC Toolchains ###
   # Stable 64-bit MSVC
-  #  - channel: stable
-  #    target: x86_64-pc-windows-msvc
+    - channel: stable
+      target: x86_64-pc-windows-msvc
   # Stable 32-bit MSVC
-  #  - channel: stable
-  #    target: i686-pc-windows-msvc
+    - channel: stable
+      target: i686-pc-windows-msvc
   # Beta 64-bit MSVC
-  #  - channel: beta
-  #    target: x86_64-pc-windows-msvc
+    - channel: beta
+      target: x86_64-pc-windows-msvc
   # Beta 32-bit MSVC
-  #  - channel: beta
-  #    target: i686-pc-windows-msvc
+    - channel: beta
+      target: i686-pc-windows-msvc
   # Nightly 64-bit MSVC
     - channel: nightly
       target: x86_64-pc-windows-msvc
@@ -26,17 +26,17 @@ environment:
 
 ### GNU Toolchains ###
   # Stable 64-bit GNU
-  #- channel: stable
-  #   target: x86_64-pc-windows-gnu
+   - channel: stable
+     target: x86_64-pc-windows-gnu
   # Stable 32-bit GNU
-  #  - channel: stable
-  #    target: i686-pc-windows-gnu
+    - channel: stable
+      target: i686-pc-windows-gnu
   # Beta 64-bit GNU
-  #  - channel: beta
-  #    target: x86_64-pc-windows-gnu
+    - channel: beta
+      target: x86_64-pc-windows-gnu
   # Beta 32-bit GNU
-  #  - channel: beta
-  #    target: i686-pc-windows-gnu
+    - channel: beta
+      target: i686-pc-windows-gnu
   # Nightly 64-bit GNU
     - channel: nightly
       target: x86_64-pc-windows-gnu
@@ -54,12 +54,9 @@ install:
   - cargo -vV
 
 build_script:
-    - cd dbgp && cargo build --verbose %cargoflags%
-    - cd ../dbgp_capi && cargo build --verbose %cargoflags%
+    - cargo build --verbose %cargoflags%
 
 test_script:
-    - cd ../dbgp && cargo test --verbose %cargoflags%
-    - cd ../dbgp_capi && cargo test --verbose %cargoflags%
-    - cd ../dbgp && cargo doc --verbose %cargoflags%
-    - cd ../dbgp_capi && cargo doc --verbose %cargoflags%
+    - cargo test --verbose %cargoflags%
+    - cargo doc --verbose %cargoflags%
 

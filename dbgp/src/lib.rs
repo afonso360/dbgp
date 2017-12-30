@@ -56,57 +56,27 @@ pub enum SessionType {
 }
 
 /// Represents a session with a debugger
-pub struct Session {
-    /// Address to listen to
-    address: SocketAddr,
+pub struct Session<R: io::Read, W: io::Write> {
+    /// Read channel
+    in_channel: R,
 
-    /// Represents the debugger status, None if there is no connection yet
-    status: Option<SessionStatus>,
+    /// Write channel
+    out_channel: W,
+
+    /// Represents the debugger status
+    status: SessionStatus,
 
     session_type: SessionType,
 }
 
-impl Session {
+impl<R: io::Read, W: io::Write> Session<R, W> {
     /// Creates a new session with the default parameters
-    pub fn new(address: SocketAddr, session_type: SessionType) -> Session {
+    pub fn new(in_channel: R, out_channel: W, session_type: SessionType) -> Session<R, W> {
         Session {
-            address: address,
-            session_type: session_type,
-            status: None,
+            in_channel,
+            out_channel,
+            session_type,
+            status: SessionStatus::Starting,
         }
-    }
-}
-
-
-struct Dbgp;
-
-impl Dbgp {
-    pub fn connect_ssl(address: SocketAddr) -> Session {
-        unimplemented!();
-    }
-
-    pub fn connect(address: SocketAddr) -> Result<Session, io::Error> {
-        unimplemented!();
-        //    let ret = TcpClient::new(DbgpProto)
-        //        .connect(address, handle)
-        //        .map(|client_proxy| {
-        //            Session::new(address, SessionType::Client)
-        //        });
-
-        //    Box::new(ret)
-    }
-
-    /// This method will block the current thread until the server is shut down.
-    pub fn serve_ssl(address: SocketAddr) {
-        unimplemented!();
-    }
-
-    /// This method will block the current thread until the server is shut down.
-    pub fn serve(address: SocketAddr) {
-        unimplemented!();
-        //TcpServer::new(DbgpProto, address)
-        //    .serve(|h: &Handle| {
-        //        Session::new(address, SessionType::Server, h)
-        //    })
     }
 }

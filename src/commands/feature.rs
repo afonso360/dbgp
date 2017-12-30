@@ -18,23 +18,38 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-use super::{Command, Response};
+use super::Command;
 use super::flag::Flag;
-use xml::reader::XmlEvent;
-
-response!(struct FeatureSetResponse {});
 
 command!("feature_set", struct FeatureSet {
     name: String: 'n',
     value: String: 'v'
-}, FeatureSetResponse, |i: &FeatureSet, xml: XmlEvent| {
-    FeatureSetResponse{}
 });
-
-response!(struct FeatureGetResponse {});
 
 command!("feature_get", struct FeatureGet {
     name: String: 'n'
-}, FeatureGetResponse, |i: &FeatureGet, xml: XmlEvent| {
-    FeatureGetResponse{}
 });
+
+#[cfg(test)]
+mod tests {
+    use super::{FeatureSet, FeatureGet};
+    use commands::flag::Flag;
+    use commands::Command;
+
+    #[test]
+    fn serialize_feature_set() {
+        let result = "feature_set -i 0 -n namef -v valuef\0";
+        assert_eq!((FeatureSet{
+            name: "namef".into(),
+            value: "valuef".into(),
+        }).serialize(0), result);
+    }
+
+    #[test]
+    fn serialize_feature_get() {
+        let result = "feature_get -i 0 -n namef\0";
+        assert_eq!((FeatureGet{
+            name: "namef".into(),
+        }).serialize(0), result);
+    }
+}

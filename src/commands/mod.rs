@@ -32,71 +32,47 @@ macro_rules! command {
     ($dbgp_name: expr,
      struct $name:ident {
         $($fname:ident: $ftype:ty: $flag: expr),*
-     },
-     $response:ident,
-     $to_response: expr) => {
-        struct $name {
-            $($fname : $ftype),*
-        }
-
-        impl Command<$response> for $name {
-            fn to_command(&self, transaction_id: u32) -> String {
-                [
-                    $dbgp_name.to_string(),
-                    format!("-i {}", transaction_id),
-                    $(self.$fname.format_flag($flag)),*
-                ].join(" ")
-            }
-
-            fn parse_response(&self, xml: XmlEvent) -> $response {
-                $to_response(self, xml)
-            }
-        }
-    }
-}
-
-macro_rules! response {
-    (struct $name:ident {
-        $($fname:ident: $ftype:ty),*
      }) => {
         struct $name {
             $($fname : $ftype),*
         }
 
-        impl Response for $name {}
-     }
+        impl Command for $name {
+            fn serialize(&self, transaction_id: u32) -> String {
+                format!("{}\0", [
+                    $dbgp_name.to_string(),
+                    format!("-i {}", transaction_id),
+                    $(self.$fname.format_flag($flag)),*
+                ].join(" "))
+            }
+        }
+    }
 }
 
-use xml::reader::XmlEvent;
+pub mod flag;
+pub mod feature;
 
 //mod base;
-mod eval;
-mod spawnpoints;
-mod rbreak;
-mod interact;
-mod notifications;
-mod stdin;
-mod flag;
-mod status;
-mod proxy;
-mod feature;
-mod continuation;
-mod io;
-mod source;
-mod stack;
-mod context;
-mod typemap;
-mod property;
-mod breakpoint;
-mod init;
+//mod eval;
+//mod spawnpoints;
+//mod rbreak;
+//mod interact;
+//mod notifications;
+//mod stdin;
+//mod status;
+//mod proxy;
+//mod continuation;
+//mod io;
+//mod source;
+//mod stack;
+//mod context;
+//mod typemap;
+//mod property;
+//mod breakpoint;
+//mod init;
 
 
-pub trait Response {}
-
-pub trait Command<A: Response> {
+pub trait Command {
     /// Outputs a DGBP compatible command string
-    fn to_command(&self, transaction_id: u32) -> String;
-
-    /// Parses a XML Node into a response type
-    fn parse_response(&self, xml: XmlEvent) -> A;
+    fn serialize(&self, transaction_id: u32) -> String;
 }

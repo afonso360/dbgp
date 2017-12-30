@@ -37,6 +37,7 @@ extern crate serde_derive;
 extern crate serde_xml_rs;
 
 pub mod escape;
+pub mod commands;
 pub mod error_codes;
 pub mod packets;
 //mod transaction;

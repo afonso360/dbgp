@@ -21,7 +21,7 @@
 use std::fmt::Display;
 use std::str::FromStr;
 
-use serde::de::{self, Deserialize, Deserializer};
+use serde::de::{self, Error, Deserialize, Deserializer};
 
 
 pub fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
@@ -31,4 +31,16 @@ pub fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 {
     let s = String::deserialize(deserializer)?;
     T::from_str(&s).map_err(de::Error::custom)
+}
+
+pub fn from_str_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
+    where D: Deserializer<'de>
+{
+    let s: String = String::deserialize(deserializer)?;
+
+    match s.as_ref() {
+        "1" => Ok(true),
+        "0" => Ok(false),
+        _ => Err(D::Error::custom("unkown value"))
+    }
 }

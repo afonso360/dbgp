@@ -44,9 +44,11 @@ pub struct ResponseFeatureGet {
 
      pub feature_name: String,
 
-     #[serde(rename = "$value")]
-     #[serde(deserialize_with = "::helpers::from_str")]
+     #[serde(deserialize_with = "::helpers::from_str_bool")]
      pub supported: bool,
+
+     #[serde(rename = "$value")]
+     pub data: String,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
@@ -112,7 +114,29 @@ mod tests {
                     command: String::from("feature_get"),
                     supported: false,
                     feature_name: String::from("async"),
+                    data: String::from("false"),
                 }
-            )
+            );
+            deserialize_test!(
+                r##"
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <response transaction_id="0"
+                          feature_name="language_name"
+                          command="feature_get"
+                          supported="1"
+                          xmlns="urn:debugger_protocol_v1">
+                    <![CDATA[Lua]]>
+                </response>
+                "##,
+
+                ResponseFeatureGet {
+                    //xmlns: Some(String::from("urn:debugger_protocol_v1")),
+                    transaction_id: 0,
+                    command: String::from("feature_get"),
+                    supported: true,
+                    feature_name: String::from("language_name"),
+                    data: String::from("Lua"),
+                }
+            );
     }
 }

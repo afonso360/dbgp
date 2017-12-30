@@ -30,7 +30,7 @@ fn handle_client(mut stream: TcpStream) {
 
                 //let cmd = (dbgp::commands::Status{}).serialize(transaction_id);
                 let cmd = (dbgp::commands::FeatureGet{
-                    name: String::from("async")
+                    name: String::from("language_name")
                 }).serialize(transaction_id);
                 stream.write(cmd.as_bytes()).unwrap();
                 transaction_id += 1;

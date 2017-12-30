@@ -27,8 +27,15 @@ include = [
 [dependencies]
 base64 = "0.9"
 bytes = "0.4"
+
 url = "1.6"
-xml-rs = "0.7"
+url_serde = "0.2"
+
+serde = "1.0"
+serde_derive = "1.0"
+serde-xml-rs = "0.2"
+
+error-chain = "0.11"
 
 [lib]
 crate-type = ["rlib", "dylib"]

@@ -20,21 +20,34 @@
 //#![deny(missing_docs)]
 //#![deny(warnings)]
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]
+#![deny(missing_debug_implementations)]
 
 //! This library implements the dbgp protocol
 
 #[macro_use]
+extern crate error_chain;
+#[macro_use]
 extern crate bytes;
 extern crate base64;
-extern crate xml;
+extern crate url;
+#[macro_use]
+extern crate url_serde;
+
+#[macro_use]
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_xml_rs;
 
 pub mod escape;
 mod error_codes;
-mod commands;
+//mod commands;
+pub mod packets;
 //mod transaction;
 
 use std::io;
 
+#[derive(Debug, Clone, PartialEq)]
 enum BreakReason {
     Ok,
     Error,
@@ -42,6 +55,7 @@ enum BreakReason {
     Exception,
 }
 
+#[derive(Debug, Clone, PartialEq)]
 enum SessionStatus {
     Starting,
     Stopping,
@@ -50,18 +64,17 @@ enum SessionStatus {
     Break(BreakReason),
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub enum SessionType {
     Client,
     Server
 }
 
 /// Represents a session with a debugger
-pub struct Session<R: io::Read, W: io::Write> {
-    /// Read channel
-    in_channel: R,
-
-    /// Write channel
-    out_channel: W,
+#[derive(Debug, Clone, PartialEq)]
+pub struct Session<RW: io::Read + io::Write> {
+    /// Communication channel
+    channel: RW,
 
     /// Represents the debugger status
     status: SessionStatus,
@@ -69,14 +82,16 @@ pub struct Session<R: io::Read, W: io::Write> {
     session_type: SessionType,
 }
 
-impl<R: io::Read, W: io::Write> Session<R, W> {
+impl<RW: io::Read + io::Write> Session<RW> {
     /// Creates a new session with the default parameters
-    pub fn new(in_channel: R, out_channel: W, session_type: SessionType) -> Session<R, W> {
+    pub fn new(channel: RW, session_type: SessionType) -> Session<RW> {
         Session {
-            in_channel,
-            out_channel,
+            channel,
             session_type,
             status: SessionStatus::Starting,
         }
     }
+
+    //pub fn try_parse(&mut self) -> Result<Command> {
+    //}
 }

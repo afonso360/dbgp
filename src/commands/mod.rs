@@ -28,6 +28,8 @@
 /// Flags will be passed in the same order as member elements of
 /// this struct, this means that the base64 data of some commands
 /// has to be the last member of the struct
+// TODO: Enable struct attribute parsing
+// TODO: Enable pub attrbutes
 macro_rules! command {
     ($dbgp_name: expr,
      struct $name:ident {
@@ -35,11 +37,11 @@ macro_rules! command {
      }) => {
         #[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
         pub struct $name {
-            $($fname : $ftype),*
+            $(pub $fname : $ftype),*
         }
 
         impl ::commands::Command for $name {
-            fn serialize(&self, transaction_id: u32) -> String {
+            fn serialize(&self, transaction_id: ::TransactionId) -> String {
                 use commands::flag::Flag;
 
                 format!("{}\0", [
@@ -81,5 +83,5 @@ pub use self::status::Status;
 
 pub trait Command {
     /// Outputs a DGBP compatible command string
-    fn serialize(&self, transaction_id: u32) -> String;
+    fn serialize(&self, transaction_id: ::TransactionId) -> String;
 }

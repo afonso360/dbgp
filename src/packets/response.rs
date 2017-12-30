@@ -20,7 +20,7 @@
 
 use url_serde;
 use url::Url;
-use {SessionStatus, BreakReason};
+use {TransactionId, SessionStatus, BreakReason};
 
 // serde_xml_rs fails when parsing Untagged enums, so i'm going to duplicate all fields
 // Fix it
@@ -34,31 +34,28 @@ use {SessionStatus, BreakReason};
 // }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
-#[serde(rename = "supprted")]
-pub enum Supported {
-    #[serde(rename = "1")]
-    Yes,
-
-    #[serde(rename = "0")]
-    No,
-}
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "response")]
 pub struct ResponseFeatureGet {
-     pub xmlns: Option<String>,
-     pub transaction_id: String,
+     // TODO: xmlns parsing isn't working
+     //pub xmlns: String,
+     #[serde(deserialize_with = "::helpers::from_str")]
+     pub transaction_id: TransactionId,
      pub command: String,
 
      pub feature_name: String,
-     pub supported: Supported,
+
+     #[serde(rename = "$value")]
+     #[serde(deserialize_with = "::helpers::from_str")]
+     pub supported: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "response")]
 pub struct ResponseStatus {
-     pub xmlns: Option<String>,
-     pub transaction_id: String,
+     // TODO: xmlns parsing isn't working
+     //pub xmlns: String,
+     #[serde(deserialize_with = "::helpers::from_str")]
+     pub transaction_id: TransactionId,
      pub command: String,
 
      pub status: SessionStatus,
@@ -71,12 +68,51 @@ mod tests {
 
     use serde_xml_rs;
     use url::Url;
+    use ::*;
+    use packets::response::*;
 
     #[test]
-    #[ignore]
-    fn deserialize_response_packet_simple() {
+    fn deserialize_response_status_packet() {
+            deserialize_test!(
+                r##"
+                <?xml version="1.0" encoding="UTF-8" ?>
+			    <response xmlns="urn:debugger_protocol_v1"
+                          transaction_id="792"
+                          status="starting"
+                          command="status"
+                          reason="ok"/>
+                "##,
+                ResponseStatus {
+                    //xmlns: Some(String::from("urn:debugger_protocol_v1")),
+                    transaction_id: 792,
+                    command: String::from("status"),
+                    status: SessionStatus::Starting,
+                    reason: BreakReason::Ok,
+                }
+            )
     }
 
-    // TODO: Parse with child elements
+    #[test]
+    fn deserialize_response_feature_get_packet() {
+            deserialize_test!(
+                r##"
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <response transaction_id="0"
+                          feature_name="async"
+                          command="feature_get"
+                          supported="0"
+                          xmlns="urn:debugger_protocol_v1">
+                    <![CDATA[false]]>
+                </response>
+                "##,
 
+                ResponseFeatureGet {
+                    //xmlns: Some(String::from("urn:debugger_protocol_v1")),
+                    transaction_id: 0,
+                    command: String::from("feature_get"),
+                    supported: false,
+                    feature_name: String::from("async"),
+                }
+            )
+    }
 }

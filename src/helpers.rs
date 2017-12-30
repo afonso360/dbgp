@@ -18,38 +18,17 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-error_chain! {
-    foreign_links {
-        Io(::std::io::Error);
-        ParseInt(::std::num::ParseIntError);
-        Utf8(::std::str::Utf8Error);
-        StringUtf8(::std::string::FromUtf8Error);
-        Xml(::serde_xml_rs::Error);
-    }
+use std::fmt::Display;
+use std::str::FromStr;
 
+use serde::de::{self, Deserialize, Deserializer};
+
+
+pub fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
+    where T: FromStr,
+          T::Err: Display,
+          D: Deserializer<'de>
+{
+    let s = String::deserialize(deserializer)?;
+    T::from_str(&s).map_err(de::Error::custom)
 }
-
-// TODO: Rename this
-pub type AllPackets = Packet<PacketVariants>;
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
-#[serde(untagged)]
-pub enum PacketVariants {
-    #[serde(rename = "init")]
-    Init(Init),
-
-
-    #[serde(rename = "response")]
-    ResponseStatus(ResponseStatus),
-
-    #[serde(rename = "response")]
-    ResponseFeatureGet(ResponseFeatureGet),
-}
-
-pub mod init;
-pub mod packet;
-pub mod response;
-
-pub use self::init::Init;
-pub use self::packet::Packet;
-pub use self::response::{ResponseStatus, ResponseFeatureGet};

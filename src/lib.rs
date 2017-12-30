@@ -36,13 +36,17 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_xml_rs;
 
+#[macro_use]
+mod macros;
 pub mod escape;
 pub mod commands;
 pub mod error_codes;
 pub mod packets;
-//mod transaction;
+mod helpers;
 
 use std::io;
+
+pub type TransactionId = u64;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]

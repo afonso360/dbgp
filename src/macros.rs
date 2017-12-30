@@ -18,16 +18,11 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-use command::Command;
-
-pub struct Transaction {
-    transaction_id: u32,
-}
-
-impl Transaction {
-    pub fn new(command: Command) -> Transaction {
-        Transaction {
-            transaction_id: 0,
-        }
-    }
+macro_rules! deserialize_test {
+    ($src: expr, $target: expr) => { {
+            assert_eq!(
+                $target,
+                serde_xml_rs::deserialize($src.as_bytes()).unwrap()
+            );
+    } }
 }

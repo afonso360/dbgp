@@ -18,15 +18,4 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-use super::{Command, Response};
-use super::flag::Flag;
-use xml::reader::XmlEvent;
-
-response!(struct StatusResponse {});
-
-command!("status",
-         struct Status {},
-         StatusResponse,
-         |i: &Status, xml: XmlEvent| {
-    StatusResponse{}
-});
+command!("status", struct Status {});

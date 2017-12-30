@@ -3,15 +3,15 @@ extern crate serde_xml_rs;
 
 use std::net::{TcpListener, TcpStream};
 use std::thread;
-use std::io::Read;
-use std::io::Write;
-use std::io::BufReader;
+use std::io::{Read, Write, BufReader};
 
 fn handle_client(mut stream: TcpStream) {
     //let session = Session::new(stream, SessionType::Server);
 
     // read 20 bytes at a time from stream echoing back to stream
-    use dbgp::packets::{Init, Packet};
+    use dbgp::packets::{Init, Packet, AllPackets};
+    use dbgp::commands::Command;
+    let mut transaction_id = 0;
     loop {
         let mut read = [0; 1028];
         match stream.read(&mut read) {
@@ -25,10 +25,12 @@ fn handle_client(mut stream: TcpStream) {
 
 
 
-                let packet: Packet<Init> = Packet::deserialize(BufReader::new(&read[..])).unwrap();
+                let packet: AllPackets = Packet::deserialize(BufReader::new(&read[..])).unwrap();
                 println!("parsed: {:?}\n", packet);
 
-                stream.write("feature_get -i 0 -n supports_async\0".as_bytes()).unwrap();
+                let cmd = (dbgp::commands::Status{}).serialize(transaction_id);
+                stream.write(cmd.as_bytes()).unwrap();
+                transaction_id += 1;
             }
             Err(err) => {
                 panic!(err);

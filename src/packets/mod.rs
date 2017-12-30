@@ -29,8 +29,26 @@ error_chain! {
 
 }
 
+// TODO: Rename this
+pub type AllPackets = Packet<PacketVariants>;
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+pub enum PacketVariants {
+    #[serde(rename = "init")]
+    Init(Init),
+
+
+    #[serde(rename = "response")]
+    ResponseStatus(ResponseStatus),
+
+    #[serde(rename = "response")]
+    ResponseFeatureGet(ResponseFeatureGet),
+}
+
 pub mod init;
 pub mod packet;
+pub mod response;
 
 pub use self::init::Init;
 pub use self::packet::Packet;
+pub use self::response::{ResponseStatus, ResponseFeatureGet};

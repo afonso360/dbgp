@@ -34,12 +34,14 @@ macro_rules! command {
         $($fname:ident: $ftype:ty: $flag: expr),*
      }) => {
         #[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
-        struct $name {
+        pub struct $name {
             $($fname : $ftype),*
         }
 
-        impl Command for $name {
+        impl ::commands::Command for $name {
             fn serialize(&self, transaction_id: u32) -> String {
+                use commands::flag::Flag;
+
                 format!("{}\0", [
                     $dbgp_name.to_string(),
                     format!("-i {}", transaction_id),
@@ -52,6 +54,11 @@ macro_rules! command {
 
 pub mod flag;
 pub mod feature;
+pub mod status;
+
+pub use self::flag::Flag;
+pub use self::feature::{FeatureGet, FeatureSet};
+pub use self::status::Status;
 
 //mod base;
 //mod eval;
@@ -60,7 +67,6 @@ pub mod feature;
 //mod interact;
 //mod notifications;
 //mod stdin;
-//mod status;
 //mod proxy;
 //mod continuation;
 //mod io;

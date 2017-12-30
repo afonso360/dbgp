@@ -44,16 +44,18 @@ pub mod packets;
 
 use std::io;
 
-#[derive(Debug, Clone, PartialEq)]
-enum BreakReason {
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum BreakReason {
     Ok,
     Error,
     Aborted,
     Exception,
 }
 
-#[derive(Debug, Clone, PartialEq)]
-enum SessionStatus {
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SessionStatus {
     Starting,
     Stopping,
     Stopped,

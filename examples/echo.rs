@@ -29,8 +29,9 @@ fn handle_client(mut stream: TcpStream) {
                 println!("parsed: {:?}\n", packet);
 
                 //let cmd = (dbgp::commands::Status{}).serialize(transaction_id);
-                let cmd = (dbgp::commands::FeatureGet{
-                    name: String::from("language_name")
+                let cmd = (dbgp::commands::FeatureSet{
+                    name: String::from("max_depth"),
+                    value: String::from("20"),
                 }).serialize(transaction_id);
                 stream.write(cmd.as_bytes()).unwrap();
                 transaction_id += 1;

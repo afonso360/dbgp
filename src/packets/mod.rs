@@ -44,6 +44,9 @@ pub enum PacketVariants {
 
     #[serde(rename = "response")]
     ResponseFeatureGet(ResponseFeatureGet),
+
+    #[serde(rename = "response")]
+    ResponseFeatureSet(ResponseFeatureSet),
 }
 
 pub mod init;
@@ -52,4 +55,8 @@ pub mod response;
 
 pub use self::init::Init;
 pub use self::packet::Packet;
-pub use self::response::{ResponseStatus, ResponseFeatureGet};
+pub use self::response::{
+    ResponseStatus,
+    ResponseFeatureGet,
+    ResponseFeatureSet,
+};

@@ -18,7 +18,7 @@
   - [ ] [status](https://xdebug.org/docs-dbgp.php#id40)
   - [ ] [Options And Configurations](https://xdebug.org/docs-dbgp.php#id41)
     - [x] [feature_get](https://xdebug.org/docs-dbgp.php#id43)
-    - [ ] [feature_set](https://xdebug.org/docs-dbgp.php#id44)
+    - [x] [feature_set](https://xdebug.org/docs-dbgp.php#id44)
   - [ ] [Continuation Commands](https://xdebug.org/docs-dbgp.php#id45)
     - [ ] [run](https://xdebug.org/docs-dbgp.php#id45)
     - [ ] [step_into](https://xdebug.org/docs-dbgp.php#id45)

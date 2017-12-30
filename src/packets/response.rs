@@ -51,6 +51,22 @@ pub struct ResponseFeatureGet {
      pub data: String,
 }
 
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+#[serde(rename = "response")]
+pub struct ResponseFeatureSet {
+     // TODO: xmlns parsing isn't working
+     //pub xmlns: String,
+     #[serde(deserialize_with = "::helpers::from_str")]
+     pub transaction_id: TransactionId,
+     pub command: String,
+
+     pub feature: String,
+
+     #[serde(deserialize_with = "::helpers::from_str_bool")]
+     pub success: bool,
+}
+
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "response")]
 pub struct ResponseStatus {
@@ -138,5 +154,27 @@ mod tests {
                     data: String::from("Lua"),
                 }
             );
+    }
+
+    #[test]
+    fn deserialize_response_feature_set_packet() {
+            deserialize_test!(
+                r##"
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <response feature="language_name"
+                          success="0"
+                          command="feature_set"
+                          transaction_id="999"
+                          xmlns="urn:debugger_protocol_v1" />
+                "##,
+
+                ResponseFeatureSet {
+                    //xmlns: Some(String::from("urn:debugger_protocol_v1")),
+                    transaction_id: 999,
+                    command: String::from("feature_set"),
+                    success: false,
+                    feature: String::from("language_name"),
+                }
+            )
     }
 }

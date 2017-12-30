@@ -6,6 +6,12 @@ This intends to comply with the protocol available on date: 2017-04-04 on [this]
 
 The protocol is also available in this [git repository][dbgp-git]
 
+## Fuzzing
+
+To run fuzzing on this crate install `cargo-fuzz` and run
+
+`cargo fuzz run -j4 fuzz_packet_parse -- -max_len=256`
+
 
 ## License
 

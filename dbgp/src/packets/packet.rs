@@ -23,6 +23,8 @@ impl<'de, I: Deserialize<'de>> Packet<I> {
         let data_length = u64::from_str(data_length_str)?;
 
         let mut inner_buf = Vec::new();
+
+        // We should read up to '\0', EOF, or data_length, whichever comes soonest
         input.read_until(b'\0', &mut inner_buf)?;
         inner_buf.pop();
 

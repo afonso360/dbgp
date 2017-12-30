@@ -38,5 +38,5 @@ serde-xml-rs = "0.2"
 error-chain = "0.11"
 
 [lib]
-crate-type = ["rlib", "dylib"]
+crate-type = ["rlib"]
 name = "dbgp"

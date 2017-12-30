@@ -19,11 +19,16 @@
  */
 
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct ErrorCode {
-    id: u16,
-    message: &'static str,
+    /// Error code
+    pub id: u16,
+
+    /// Error Message
+    pub message: &'static str,
 }
 
+#[allow(unused_doc_comment)]
 pub static ERROR_CODES: [ErrorCode; 22] = [
 
 

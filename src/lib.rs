@@ -26,22 +26,17 @@
 
 #[macro_use]
 extern crate error_chain;
-#[macro_use]
-extern crate bytes;
 extern crate base64;
 extern crate url;
-#[macro_use]
 extern crate url_serde;
 
-#[macro_use]
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_xml_rs;
 
 pub mod escape;
-mod error_codes;
-//mod commands;
+pub mod error_codes;
 pub mod packets;
 //mod transaction;
 

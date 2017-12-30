@@ -27,7 +27,6 @@ include = [
 [dependencies]
 base64 = "0.9"
 bytes = "0.4"
-lazy_static = "1.0"
 url = "1.6"
 xml-rs = "0.7"
 

@@ -24,7 +24,6 @@
 //! This library implements the dbgp protocol
 
 #[macro_use]
-extern crate lazy_static;
 extern crate bytes;
 extern crate base64;
 extern crate xml;
@@ -35,15 +34,6 @@ mod commands;
 //mod transaction;
 
 use std::io;
-use std::net::{IpAddr, SocketAddr, Ipv4Addr};
-
-lazy_static! {
-    static ref DEFAULT_IP_ADDR: Ipv4Addr = {
-        Ipv4Addr::new(127,0,0,1)
-    };
-}
-
-static DEFAULT_PORT: u16 = 9000;
 
 enum BreakReason {
     Ok,

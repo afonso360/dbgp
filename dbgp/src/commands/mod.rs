@@ -41,10 +41,11 @@ macro_rules! command {
 
         impl Command<$response> for $name {
             fn to_command(&self, transaction_id: u32) -> String {
-                [$dbgp_name.to_string(),
-                format!("-i {}", transaction_id),
-                $(self.$fname.format_flag($flag)),*]
-                    .join(" ")
+                [
+                    $dbgp_name.to_string(),
+                    format!("-i {}", transaction_id),
+                    $(self.$fname.format_flag($flag)),*
+                ].join(" ")
             }
 
             fn parse_response(&self, xml: XmlEvent) -> $response {

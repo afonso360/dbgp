@@ -24,7 +24,7 @@ use std::str::{self, FromStr};
 use super::Result;
 use serde_xml_rs;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
 pub struct Packet<I> {
     /// Do *not* rely on this, it could be anything!
     /// but we should't read more than this amount of bytes

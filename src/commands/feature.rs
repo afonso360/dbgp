@@ -21,14 +21,18 @@
 use super::Command;
 use super::flag::Flag;
 
-command!("feature_set", struct FeatureSet {
-    name: String: 'n',
-    value: String: 'v'
-});
+command!("feature_set",
+    struct FeatureSet {
+        name: String: 'n',
+        value: String: 'v'
+    }
+);
 
-command!("feature_get", struct FeatureGet {
-    name: String: 'n'
-});
+command!("feature_get",
+    struct FeatureGet {
+        name: String: 'n'
+    }
+);
 
 #[cfg(test)]
 mod tests {

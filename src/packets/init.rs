@@ -21,7 +21,7 @@
 use url_serde;
 use url::Url;
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 pub struct Init {
     pub appid: String,
     pub idekey: String,

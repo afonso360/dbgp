@@ -33,6 +33,7 @@ macro_rules! command {
      struct $name:ident {
         $($fname:ident: $ftype:ty: $flag: expr),*
      }) => {
+        #[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
         struct $name {
             $($fname : $ftype),*
         }

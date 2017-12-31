@@ -35,6 +35,7 @@ macro_rules! command {
      struct $name:ident {
         $($fname:ident: $ftype:ty: $flag: expr),*
      }) => {
+
         #[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
         pub struct $name {
             $(pub $fname : $ftype),*
@@ -46,7 +47,7 @@ macro_rules! command {
 
                 format!("{}\0", [
                     $dbgp_name.to_string(),
-                    format!("-i {}", transaction_id),
+                    transaction_id.format_flag('i'),
                     $(self.$fname.format_flag($flag)),*
                 ].join(" "))
             }
@@ -58,17 +59,18 @@ pub mod flag;
 pub mod feature;
 pub mod status;
 pub mod continuation;
+mod rbreak;
 
 pub use self::flag::Flag;
 pub use self::feature::{FeatureGet, FeatureSet};
 pub use self::status::Status;
 pub use self::continuation::{Run, StepInto, StepOver, StepOut, Stop, Detach};
+pub use self::rbreak::Break;
 
 
 //mod base;
 //mod eval;
 //mod spawnpoints;
-//mod rbreak;
 //mod interact;
 //mod notifications;
 //mod stdin;

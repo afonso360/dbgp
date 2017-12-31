@@ -18,16 +18,13 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+command!("break", struct Break {});
 
-use super::{Command, Response};
-use super::flag::Flag;
-use xml::reader::XmlEvent;
 
-response!(struct BreakResponse {});
-
-// TODO: Test this
-command!("break",
-         struct Break {},
-         BreakResponse, |i: &Break, xml: XmlEvent| {
-    BreakResponse{}
-});
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn serialize_break() {
+        command_serialize_test!(Break{}, 0, "break -i 0\0");
+    }
+}

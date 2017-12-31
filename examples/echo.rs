@@ -9,7 +9,7 @@ fn handle_client(mut stream: TcpStream) {
     //let session = Session::new(stream, SessionType::Server);
 
     // read 20 bytes at a time from stream echoing back to stream
-    use dbgp::packets::{Init, Packet, AllPackets};
+    use dbgp::packets::{Packet, AllPackets};
     use dbgp::commands::Command;
     let mut transaction_id = 0;
     loop {

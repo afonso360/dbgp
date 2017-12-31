@@ -18,8 +18,6 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-use url_serde;
-use url::Url;
 use {TransactionId, SessionStatus, BreakReason};
 
 // serde_xml_rs fails when parsing Untagged enums, so i'm going to duplicate all fields
@@ -82,10 +80,7 @@ pub struct ResponseStatus {
 
 #[cfg(test)]
 mod tests {
-    use packets::Init;
-
     use serde_xml_rs;
-    use url::Url;
     use ::*;
     use packets::response::*;
 

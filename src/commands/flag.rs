@@ -29,11 +29,30 @@ pub trait Flag {
     fn format_flag(&self, flag: char) -> String;
 }
 
-impl Flag for u32 {
-    fn format_flag(&self, flag: char) -> String {
-        format!("-{} {}", flag, *self)
+macro_rules! simpl_flag_impl {
+    ($type: ty) => {
+        impl Flag for $type {
+            fn format_flag(&self, flag: char) -> String {
+                format!("-{} {}", flag, *self)
+            }
+        }
+
     }
 }
+
+simpl_flag_impl!(u8);
+simpl_flag_impl!(u16);
+simpl_flag_impl!(u32);
+simpl_flag_impl!(u64);
+simpl_flag_impl!(i8);
+simpl_flag_impl!(i16);
+simpl_flag_impl!(i32);
+simpl_flag_impl!(i64);
+simpl_flag_impl!(usize);
+simpl_flag_impl!(isize);
+simpl_flag_impl!(f32);
+simpl_flag_impl!(f64);
+
 
 impl<T> Flag for Option<T>
     where T: Flag {

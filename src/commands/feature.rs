@@ -33,22 +33,24 @@ command!("feature_get",
 
 #[cfg(test)]
 mod tests {
-    use super::{FeatureSet, FeatureGet};
-    use commands::flag::Flag;
-    use commands::Command;
-
     #[test]
     fn serialize_feature_set() {
-        command_serialize_test!(FeatureSet{
-            name: "namef".into(),
-            value: "valuef".into(),
-        }, 0, "feature_set -i 0 -n namef -v valuef\0");
+        command_serialize_test!(
+            FeatureSet {
+                name: "namef".into(),
+                value: "valuef".into(),
+            },
+            0,
+            "feature_set -i 0 -n namef -v valuef\0"
+        );
     }
 
     #[test]
     fn serialize_feature_get() {
-        command_serialize_test!(FeatureGet{
-            name: "namef".into(),
-        }, 0, "feature_get -i 0 -n namef\0");
+        command_serialize_test!(
+            FeatureGet { name: "namef".into() },
+            0,
+            "feature_get -i 0 -n namef\0"
+        );
     }
 }

@@ -18,6 +18,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#[cfg(test)]
 macro_rules! deserialize_test {
     ($src: expr, $target: expr) => { {
             assert_eq!(
@@ -27,6 +28,7 @@ macro_rules! deserialize_test {
     } }
 }
 
+#[cfg(test)]
 macro_rules! command_serialize_test {
     ($src: expr, $tid: expr, $target: expr) => { {
         use commands::*;

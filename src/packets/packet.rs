@@ -75,7 +75,7 @@ impl<I: Serialize> Packet<I> {
 #[cfg(test)]
 mod tests {
     use super::Packet;
-    use std::io::{BufReader, Read};
+    use std::io::BufReader;
 
 
     #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]

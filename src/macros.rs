@@ -26,3 +26,13 @@ macro_rules! deserialize_test {
             );
     } }
 }
+
+macro_rules! command_serialize_test {
+    ($src: expr, $tid: expr, $target: expr) => { {
+        use commands::*;
+        assert_eq!(
+            $target,
+            ($src).serialize($tid)
+        );
+    } }
+}

@@ -57,10 +57,13 @@ macro_rules! command {
 pub mod flag;
 pub mod feature;
 pub mod status;
+pub mod continuation;
 
 pub use self::flag::Flag;
 pub use self::feature::{FeatureGet, FeatureSet};
 pub use self::status::Status;
+pub use self::continuation::{Run, StepInto, StepOver, StepOut, Stop, Detach};
+
 
 //mod base;
 //mod eval;
@@ -70,7 +73,6 @@ pub use self::status::Status;
 //mod notifications;
 //mod stdin;
 //mod proxy;
-//mod continuation;
 //mod io;
 //mod source;
 //mod stack;

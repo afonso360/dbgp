@@ -18,60 +18,47 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-use super::{Command, Response};
-use super::flag::Flag;
-use xml::reader::XmlEvent;
+command!("run", struct Run {});
 
-response!(struct RunResponse {});
+command!("step_into", struct StepInto {});
 
-command!("run",
-         struct Run {},
-         RunResponse,
-         |i: &Run, xml: XmlEvent| {
-    RunResponse{}
-});
+command!("step_over", struct StepOver {});
 
-response!(struct StepIntoResponse {});
+command!("step_out", struct StepOut {});
 
-command!("step_into",
-         struct StepInto {},
-         StepIntoResponse,
-         |i: &StepInto, xml: XmlEvent| {
-    StepIntoResponse{}
-});
+command!("stop", struct Stop {});
 
-response!(struct StepOverResponse {});
+command!("detach", struct Detach {});
 
-command!("step_over",
-         struct StepOver {},
-         StepOverResponse,
-         |i: &StepOver, xml: XmlEvent| {
-    StepOverResponse{}
-});
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn serialize_run() {
+        command_serialize_test!(Run{}, 0, "run -i 0\0")
+    }
 
-response!(struct StepOutResponse {});
+    #[test]
+    fn serialize_step_into() {
+        command_serialize_test!(StepInto{}, 1, "step_into -i 1\0")
+    }
 
-command!("step_out",
-         struct StepOut {},
-         StepOutResponse,
-         |i: &StepOut, xml: XmlEvent| {
-    StepOutResponse{}
-});
+    #[test]
+    fn serialize_step_over() {
+        command_serialize_test!(StepOver{}, 2, "step_over -i 2\0")
+    }
 
-response!(struct StopResponse {});
+    #[test]
+    fn serialize_step_out() {
+        command_serialize_test!(StepOut{}, 3, "step_out -i 3\0")
+    }
 
-command!("stop",
-         struct Stop {},
-         StopResponse,
-         |i: &Stop, xml: XmlEvent| {
-    StopResponse{}
-});
+    #[test]
+    fn serialize_stop() {
+        command_serialize_test!(Stop{}, 4, "stop -i 4\0")
+    }
 
-response!(struct DetachResponse {});
-
-command!("detach",
-         struct Detach {},
-         DetachResponse,
-         |i: &Detach, xml: XmlEvent| {
-    DetachResponse{}
-});
+    #[test]
+    fn serialize_detach() {
+        command_serialize_test!(Detach{}, 5, "detach -i 5\0")
+    }
+}

@@ -39,18 +39,16 @@ mod tests {
 
     #[test]
     fn serialize_feature_set() {
-        let result = "feature_set -i 0 -n namef -v valuef\0";
-        assert_eq!((FeatureSet{
+        command_serialize_test!(FeatureSet{
             name: "namef".into(),
             value: "valuef".into(),
-        }).serialize(0), result);
+        }, 0, "feature_set -i 0 -n namef -v valuef\0");
     }
 
     #[test]
     fn serialize_feature_get() {
-        let result = "feature_get -i 0 -n namef\0";
-        assert_eq!((FeatureGet{
+        command_serialize_test!(FeatureGet{
             name: "namef".into(),
-        }).serialize(0), result);
+        }, 0, "feature_get -i 0 -n namef\0");
     }
 }

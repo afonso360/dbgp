@@ -19,3 +19,11 @@
  */
 
 command!("status", struct Status {});
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn serialize_status() {
+        command_serialize_test!(Status{}, 0, "status -i 0\0")
+    }
+}

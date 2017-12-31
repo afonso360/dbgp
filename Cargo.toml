@@ -5,10 +5,10 @@ name = "dbgp"
 readme = "README.md"
 version = "0.0.1"
 repository = "https://github.com/afonso360/dbgp"
-documentation = "https://docs.rs/dbgp/0.0.1/dbgp"
+documentation = "https://docs.rs/dbgp/"
 homepage = "https://github.com/afonso360/dbgp"
 description = """
-Name reserved for WIP crate
+An implmenetation of the DBGp protocol
 
 This crate is licensed under the GPL v2 with a Linking Exception
 See LICENSE for details
@@ -39,3 +39,8 @@ error-chain = "0.11"
 [lib]
 crate-type = ["rlib"]
 name = "dbgp"
+
+
+[badges]
+travis-ci = { repository = "afonso360/dbgp" }
+appveyor = { repository = "afonso360/dbgp" }

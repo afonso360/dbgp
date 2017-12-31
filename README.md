@@ -12,6 +12,10 @@ To run fuzzing on this crate install `cargo-fuzz` and run
 
 `cargo fuzz run -j4 fuzz_packet_parse -- -max_len=256`
 
+## TODO
+
+Add Quickcheck tests when we are able to serialize/deserialize commands or packets
+
 
 ## License
 

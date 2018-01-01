@@ -18,10 +18,12 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-//#![deny(missing_docs)]
-//#![deny(warnings)]
+#![deny(
+    //missing_docs,
+    missing_debug_implementations,
+    warnings
+)]
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]
-#![deny(missing_debug_implementations)]
 
 //! This library implements the dbgp protocol
 

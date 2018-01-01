@@ -50,3 +50,4 @@ name = "dbgp"
 [badges]
 travis-ci = { repository = "afonso360/dbgp" }
 appveyor = { repository = "afonso360/dbgp" }
+coveralls = { repository = "afonso360/dbgp" }

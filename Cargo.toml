@@ -23,6 +23,10 @@ include = [
     "README.md",
 ]
 
+[features]
+default = ["backtrace"]
+
+backtrace = ["error-chain/backtrace"]
 
 [dependencies]
 base64 = "0.9"

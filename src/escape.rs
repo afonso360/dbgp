@@ -20,39 +20,28 @@
 
 //! Implements escapes according to section 6
 
-
 /// This function escapes a string as defined in
 /// [section 6](https://xdebug.org/docs-dbgp.php#id27)
 /// of the dbgp protocol
 ///
 /// Currently the only defined escape is to escape inner quotes
-// TODO: This is a mess
-// TODO: REDO THIS PLEASE
 pub fn escape<S: Into<String>>(string: S) -> String {
-    let string = string.into();
-    let escape_chars = vec!['"', '\''];
-    let mut inside_quotes = ' ';
-    let mut end = String::new();
-    let mut index: usize = 0;
-    let mut last_quote_index: usize = 0;
-
-    for c in string.chars() {
-        if escape_chars.contains(&c) && inside_quotes != c {
-            inside_quotes = c;
-        } else if escape_chars.contains(&c) && inside_quotes == c {
-            end.push('\\');
-            last_quote_index = index;
-            index += 1;
-        }
-
-        end.push(c);
-        index += 1;
+    let mut string = string.into();
+    if !needs_escape(&string) {
+        return string;
     }
 
-    if last_quote_index != 0 {
-        end.remove(last_quote_index);
-    }
-    end
+    string = string.replace('"', r#"\""#);
+
+    format!(r#""{}""#, string)
+}
+
+pub fn needs_escape<SR: AsRef<str>>(string: SR) -> bool {
+    let string = string.as_ref();
+
+    // Technically we should only escape if we find a Space, but i've used
+    // is_whitespace because I think some clients wouldn't handle tabs correctly
+    !( string.find(char::is_whitespace) == None && string.find('"') == None )
 }
 
 
@@ -61,51 +50,35 @@ mod tests {
     use escape::escape;
 
     #[test]
-    fn escape_single_quotes() {
-        let command = "'$x['a b']'";
-        let result = "'$x[\\'a b\\']'";
+    fn escape_encloses_quotes_on_whitespace_space() {
+        let command = r#"x['a b']"#;
+        let result = r#""x['a b']""#;
+        println!("command: {}\nresult: {}\nexpected: {}", command, escape(command.to_string()), result);
         assert_eq!(escape(command.to_string()), result);
     }
 
     #[test]
-    fn escape_single_quotes_unchanged() {
-        let command = "'$x[\"a b\"]'";
-        let result = "'$x[\"a b\"]'";
-        assert_eq!(escape(command.to_string()), result);
-    }
-
-    #[test]
-    fn escape_quotes() {
-        let command = "\"$x[\"a b\"]\"";
-        let result = "\"$x[\\\"a b\\\"]\"";
-        assert_eq!(escape(command.to_string()), result);
-    }
-
-    #[test]
-    fn escape_inner_single_quotes() {
-        let command = "\"$x['a b']\"";
-        let result = "\"$x['a b']\"";
+    fn escape_encloses_quotes_on_whitespace_tab() {
+        let command = r#"x['a	b']"#;
+        let result = r#""x['a	b']""#;
         assert_eq!(escape(command.to_string()), result);
     }
 
     #[test]
     fn escape_nothing() {
-        let string = "$x['a b']#$:";
+        let string = "$x['ab']#$:";
         assert_eq!(escape(string.to_string()), string);
     }
 
     #[test]
-    #[ignore]
     fn escape_fuzz_1() {
         let string = "'RR٭'ű7";
-        let _ = escape(string.to_string());
+        assert_eq!(escape(string.to_string()), string);
     }
 
     #[test]
-    #[ignore]
     fn escape_fuzz_2() {
         let string = "R'٭R屴%'7";
-        let _ = escape(string.to_string());
+        assert_eq!(escape(string.to_string()), string);
     }
-
 }

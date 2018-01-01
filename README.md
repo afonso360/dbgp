@@ -1,4 +1,4 @@
-# dbgp [![travis-badge][]][travis] [![appveyor-badge][]][appveyor] [![coveralls-badge][]][coveralls] [![license-badge][]][license] [![docs-badge][]][docs]
+# dbgp [![travis-badge][]][travis] [![appveyor-badge][]][appveyor] [![coveralls-badge][]][coveralls] [![dependencyci-badge][]][dependencyci] [![license-badge][]][license] [![docs-badge][]][docs]
 
 Implementation of the dbgp protocol
 
@@ -28,6 +28,7 @@ Read [LICENSE][license] for more information.
 [travis-badge]: https://img.shields.io/travis/afonso360/dbgp/master.svg?style=flat-square
 [appveyor-badge]: https://img.shields.io/appveyor/ci/afonso360/dbgp/master.svg?style=flat-square
 [coveralls-badge]: https://img.shields.io/coveralls/afonso360/dbgp/master.svg?style=flat-square
+[dependencyci-badge]: https://dependencyci.com/github/afonso360/dbgp/badge?style=flat-square
 [license-badge]: https://img.shields.io/badge/license-GPLv2%20With%20Linking%20exception-blue.svg?style=flat-square
 [docs-badge]: https://img.shields.io/badge/docs-0.0.1-blue.svg?style=flat-square
 [travis]: https://travis-ci.org/afonso360/dbgp
@@ -37,3 +38,4 @@ Read [LICENSE][license] for more information.
 [license]: LICENSE
 [dbgp]: https://xdebug.org/docs-dbgp.php#id21
 [dbgp-git]: https://github.com/derickr/dbgp
+[dependencyci]: https://dependencyci.com/github/afonso360/dbgp

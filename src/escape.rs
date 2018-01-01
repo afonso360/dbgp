@@ -93,4 +93,19 @@ mod tests {
         let string = "$x['a b']#$:";
         assert_eq!(escape(string.to_string()), string);
     }
+
+    #[test]
+    #[ignore]
+    fn escape_fuzz_1() {
+        let string = "'RR٭'ű7";
+        let _ = escape(string.to_string());
+    }
+
+    #[test]
+    #[ignore]
+    fn escape_fuzz_2() {
+        let string = "R'٭R屴%'7";
+        let _ = escape(string.to_string());
+    }
+
 }

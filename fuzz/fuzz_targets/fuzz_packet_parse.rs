@@ -6,5 +6,4 @@ use dbgp::packets::{Packet,Init};
 
 fuzz_target!(|data: &[u8]| {
     let _: Result<Packet<Init>, _> = dbgp::packets::Packet::deserialize(data);
-    // fuzzed code goes here
 });

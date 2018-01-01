@@ -20,3 +20,7 @@ members = ["."]
 [[bin]]
 name = "fuzz_packet_parse"
 path = "fuzz_targets/fuzz_packet_parse.rs"
+
+[[bin]]
+name = "fuzz_command_escape"
+path = "fuzz_targets/fuzz_command_escape.rs"

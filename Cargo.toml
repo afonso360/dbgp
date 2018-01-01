@@ -34,7 +34,9 @@ serde = "1.0"
 serde_derive = "1.0"
 serde-xml-rs = "0.2"
 
-error-chain = "0.11"
+[dependencies.error-chain]
+version = "0.11"
+default-features = false
 
 [lib]
 crate-type = ["rlib"]

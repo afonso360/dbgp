@@ -26,10 +26,10 @@
 /// of the dbgp protocol
 ///
 /// Currently the only defined escape is to escape inner quotes
-// TODO: Consider having a Into<String> as an argument
 // TODO: This is a mess
 // TODO: REDO THIS PLEASE
-pub fn escape(string: String) -> String {
+pub fn escape<S: Into<String>>(string: S) -> String {
+    let string = string.into();
     let escape_chars = vec!['"', '\''];
     let mut inside_quotes = ' ';
     let mut end = String::new();

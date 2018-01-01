@@ -65,6 +65,12 @@ impl<T> Flag for Option<T>
 }
 
 
+impl Flag for AsRef<str> {
+    fn format_flag(&self, flag: char) -> String {
+        format!("-{} {}", flag, escape::escape(self.as_ref().to_owned()))
+    }
+}
+
 impl Flag for String {
     fn format_flag(&self, flag: char) -> String {
         format!("-{} {}", flag, escape::escape(self.clone()))
@@ -85,5 +91,18 @@ impl Flag for bool {
 impl Flag for [u8] {
     fn format_flag(&self, flag: char) -> String {
         format!("-{} {}", flag, base64::encode(self))
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use commands::flag::Flag;
+
+    #[test]
+    fn flag_base64_encode() {
+        let buffer = [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x20, 0x21, 0x21];
+        let result = "-d SGVsbG8gd29ybGQgISE=";
+        assert_eq!(buffer.format_flag('d'), result);
     }
 }

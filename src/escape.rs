@@ -44,41 +44,75 @@ pub fn needs_escape<SR: AsRef<str>>(string: SR) -> bool {
     !( string.find(char::is_whitespace) == None && string.find('"') == None )
 }
 
+pub fn unescape<S: Into<String>>(string: S) -> String {
+    let mut string = string.into();
+    if !string.starts_with('"') {
+        return string;
+    }
+
+    string = string.replace(r#"\""#, "\"");
+    string.chars()
+        .skip(1)
+        .take(string.chars().count() - 2)
+        .collect()
+}
+
+
 
 #[cfg(test)]
 mod tests {
-    use escape::escape;
+    use escape::{unescape, escape};
+
+    macro_rules! roundtrip_test {
+        ($orig: expr, $new: expr) => {
+            let escaped = escape($orig);
+            assert_eq!(escaped, $new);
+
+            let unescaped = unescape(escaped);
+            assert_eq!(unescaped, $orig);
+        }
+    }
 
     #[test]
     fn escape_encloses_quotes_on_whitespace_space() {
-        let command = r#"x['a b']"#;
-        let result = r#""x['a b']""#;
-        println!("command: {}\nresult: {}\nexpected: {}", command, escape(command.to_string()), result);
-        assert_eq!(escape(command.to_string()), result);
+        roundtrip_test!(r#"x['a b']"#, r#""x['a b']""#);
     }
 
     #[test]
     fn escape_encloses_quotes_on_whitespace_tab() {
-        let command = r#"x['a	b']"#;
-        let result = r#""x['a	b']""#;
-        assert_eq!(escape(command.to_string()), result);
+        roundtrip_test!(r#"x['a	b']"#, r#""x['a	b']""#);
     }
 
     #[test]
     fn escape_nothing() {
         let string = "$x['ab']#$:";
-        assert_eq!(escape(string.to_string()), string);
+        roundtrip_test!(string, string);
     }
 
     #[test]
-    fn escape_fuzz_1() {
+    fn fuzz_1() {
         let string = "'RR٭'ű7";
-        assert_eq!(escape(string.to_string()), string);
+        roundtrip_test!(string, string);
     }
 
     #[test]
-    fn escape_fuzz_2() {
+    fn fuzz_2() {
         let string = "R'٭R屴%'7";
-        assert_eq!(escape(string.to_string()), string);
+        roundtrip_test!(string, string);
+    }
+
+    #[test]
+    #[ignore]
+    fn fuzz_3() {
+        let string = r#"'R"\"#;
+        roundtrip_test!(string, string);
+    }
+
+
+    quickcheck! {
+        fn escape_roundtrip(test: String) -> bool {
+            let original = test.clone();
+            original == unescape(escape(test))
+        }
     }
 }

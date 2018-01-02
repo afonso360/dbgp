@@ -2,7 +2,7 @@
 #[macro_use] extern crate libfuzzer_sys;
 extern crate dbgp;
 
-use dbgp::escape::escape;
+use dbgp::escape::{escape, unescape};
 
 fuzz_target!(|data: &[u8]| {
     let string = match String::from_utf8(data.to_vec()) {
@@ -10,6 +10,8 @@ fuzz_target!(|data: &[u8]| {
         Err(_) => return
     };
 
-    let _ = escape(string);
+    let original = string.clone();
+    let new = unescape(escape(string));
+    assert_eq!(original, new);
 });
 

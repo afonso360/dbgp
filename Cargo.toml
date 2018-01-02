@@ -42,6 +42,9 @@ serde-xml-rs = "0.2"
 version = "0.11"
 default-features = false
 
+[dev-dependencies]
+quickcheck = "0.6"
+
 [lib]
 crate-type = ["rlib"]
 name = "dbgp"

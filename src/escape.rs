@@ -25,6 +25,7 @@
 /// of the dbgp protocol
 ///
 /// Currently the only defined escape is to escape inner quotes
+// TODO: We can probably use Cow here
 pub fn escape<S: Into<String>>(string: S) -> String {
     let mut string = string.into();
     if !needs_escape(&string) {
@@ -110,6 +111,7 @@ mod tests {
 
 
     quickcheck! {
+        #[ignore]
         fn escape_roundtrip(test: String) -> bool {
             let original = test.clone();
             original == unescape(escape(test))

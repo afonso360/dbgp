@@ -12,11 +12,13 @@ fn handle_client(mut stream: TcpStream) {
     use dbgp::packets::{Packet, AllPackets};
     use dbgp::commands::Command;
     let mut transaction_id = 0;
+    let mut command_state = 0;
     loop {
         let mut read = [0; 1028];
         match stream.read(&mut read) {
             Ok(n) => {
-                if n == 0 { // connection was closed
+                if n == 0 {
+                    // connection was closed
                     break;
                 }
 
@@ -28,11 +30,27 @@ fn handle_client(mut stream: TcpStream) {
                 let packet: AllPackets = Packet::deserialize(BufReader::new(&read[..])).unwrap();
                 println!("parsed: {:?}\n", packet);
 
-                //let cmd = (dbgp::commands::Status{}).serialize(transaction_id);
-                let cmd = (dbgp::commands::FeatureSet{
-                    name: String::from("max_depth"),
-                    value: String::from("20"),
-                }).serialize(transaction_id);
+                match command_state {
+                    0 => {
+                        let cmd = (dbgp::commands::Break {}).serialize(transaction_id);
+                        stream.write(cmd.as_bytes()).unwrap();
+                    }
+                    1 => {
+                        let cmd = (dbgp::commands::Run {}).serialize(transaction_id);
+                        stream.write(cmd.as_bytes()).unwrap();
+                    }
+                    _ => {
+                        let cmd = (dbgp::commands::Status {}).serialize(transaction_id);
+                        stream.write(cmd.as_bytes()).unwrap();
+                    }
+                }
+
+                transaction_id += 1;
+                command_state += 1;
+
+                thread::sleep_ms(200);
+
+                let cmd = (dbgp::commands::Run {}).serialize(transaction_id);
                 stream.write(cmd.as_bytes()).unwrap();
                 transaction_id += 1;
             }

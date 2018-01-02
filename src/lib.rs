@@ -46,38 +46,12 @@ extern crate quickcheck;
 mod macros;
 pub mod escape;
 pub mod commands;
-pub mod error_codes;
+pub mod types;
 pub mod packets;
 mod helpers;
 
 use std::io;
-
-pub type TransactionId = u64;
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum BreakReason {
-    Ok,
-    Error,
-    Aborted,
-    Exception,
-}
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum SessionStatus {
-    Starting,
-    Stopping,
-    Stopped,
-    Running,
-    Break(BreakReason),
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum SessionType {
-    Client,
-    Server
-}
+pub use types::*;
 
 /// Represents a session with a debugger
 #[derive(Debug, Clone, PartialEq)]

@@ -23,34 +23,20 @@ use super::flag::Flag;
 use xml::reader::XmlEvent;
 use base64;
 
-response!(struct BreakpointSetResponse {});
-
 command!("breakpoint_set", struct BreakpointSet {
     hit_value: u32:                     'h',
     btype:     BreakpointType:          't',
     state:     Option<BreakpointState>: 's',
     temporary: bool:                    't'
-}, BreakpointSetResponse, |i: &BreakpointSet, xml: XmlEvent| {
-    BreakpointSetResponse{}
 });
-
-response!(struct BreakpointGetResponse {});
 
 command!("breakpoint_get", struct BreakpointGet {
     breakpoint_id: u32: 'd'
-}, BreakpointGetResponse, |i: &BreakpointGet, xml: XmlEvent| {
-    BreakpointGetResponse{}
 });
-
-response!(struct BreakpointRemoveResponse {});
 
 command!("breakpoint_remove", struct BreakpointRemove {
     breakpoint_id: u32: 'd'
-}, BreakpointRemoveResponse, |i: &BreakpointRemove, xml: XmlEvent| {
-    BreakpointRemoveResponse{}
 });
-
-response!(struct BreakpointUpdateResponse {});
 
 command!("breakpoint_update", struct BreakpointUpdate {
     breakpoint_id: u32:                     'd',
@@ -58,19 +44,11 @@ command!("breakpoint_update", struct BreakpointUpdate {
     lineno:        Option<u32>:             'n',
     hit_value:     Option<u32>:             'h',
     hit_condition: Option<String>:          'o'
-}, BreakpointUpdateResponse, |i: &BreakpointUpdate, xml: XmlEvent| {
-    BreakpointUpdateResponse{}
 });
 
-response!(struct BreakpointListResponse {});
+command!("breakpoint_list", struct BreakpointList {});
 
-command!("breakpoint_list",
-         struct BreakpointList {},
-         BreakpointListResponse,
-         |i: &BreakpointList, xml: XmlEvent| {
-    BreakpointListResponse{}
-});
-
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
 pub enum BreakpointType {
     Line{ filename: String, lineno: u32 },
     Call{ function: String },
@@ -100,6 +78,7 @@ impl Flag for BreakpointType {
 }
 
 
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
 pub enum BreakpointState {
     Enabled,
     Disabled

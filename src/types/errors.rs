@@ -27,15 +27,15 @@ use ::*;
 // TODO: Make this generic
 #[serde(untagged)]
 pub enum ErrorResponseString {
-    Ok(String),
     Err(PacketError),
+    Ok(String),
 }
 
 // TODO: Is this a good name?
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "error")]
 pub struct PacketError {
-     #[serde(deserialize_with = "::helpers::from_str")]
+    #[serde(deserialize_with = "::helpers::from_str")]
     pub code: u16,
 
     // TODO: It shouldn't just be string, we can also have cusetom xml nodes
@@ -43,10 +43,10 @@ pub struct PacketError {
     // into the client of this library as a string, so if this captures
     // the xml info as text, leave it
     #[serde(rename = "$value")]
-    pub data: Vec<Message>,
+    pub data: Message,
 }
 
-trait DbgpError {
+pub trait DbgpError {
     /// Should provide a reason for the error
     // TODO: Should we return a static string?
     fn reason(&self) -> String;
@@ -57,25 +57,41 @@ mod test {
 
     #[test]
     fn parse_error_node() {
-            deserialize_test!(
-                r##"
-                <?xml version="1.0" encoding="UTF-8" ?>
-                <error code="998">
-                    <message>
-                        <![CDATA[attempt to index field 'previous_context']]>
-                    </message>
-                </error>
-                "##,
+        deserialize_test!(
+            r##"
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <error code="998">
+                <message>
+                    <![CDATA[attempt to index field 'previous_context']]>
+                </message>
+            </error>
+            "##,
 
-                PacketError {
-                    code: 998,
-                    data: vec![
-                        Message::new("attempt to index field 'previous_context'"),
-                    ],
-                }
-            )
+            PacketError {
+                code: 998,
+                data: Message::new("attempt to index field 'previous_context'"),
+            }
+        )
     }
 
+    #[test]
+    fn parse_error_response_string() {
+        deserialize_test!(
+            r##"
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <error code="998">
+                <message>
+                    <![CDATA[attempt to index field 'previous_context']]>
+                </message>
+            </error>
+            "##,
+
+            ErrorResponseString::Err( PacketError {
+                code: 998,
+                data: Message::new("attempt to index field 'previous_context'"),
+            } )
+        )
+    }
 }
 
 // TODO: Figure out a way to provide this, thats extensible to users

@@ -97,7 +97,6 @@ pub struct ResponseBreak {
 
 #[cfg(test)]
 mod tests {
-    use serde_xml_rs;
     use ::*;
     use packets::response::*;
 
@@ -222,9 +221,7 @@ mod tests {
                     command: String::from("feature_set"),
                     data: ErrorResponseString::Err(PacketError{
                         code: 998,
-                        data: vec![
-                            Message::new("attempt to index field 'previous_context'")
-                        ],
+                        data: Message::new("attempt to index field 'previous_context'")
                     })
 
                 }

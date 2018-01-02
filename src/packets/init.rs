@@ -20,6 +20,7 @@
 
 use url_serde;
 use url::Url;
+use ProtocolVersion;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "init")]
@@ -30,7 +31,7 @@ pub struct Init {
     pub thread: String,
     pub parent: String,
     pub language: String,
-    pub protocol_version: String,
+    pub protocol_version: ProtocolVersion,
 
     #[serde(with = "url_serde")]
     pub fileuri: Url,
@@ -38,6 +39,7 @@ pub struct Init {
 
 #[cfg(test)]
 mod tests {
+    use ::*;
     use serde_xml_rs::deserialize;
     use super::Init;
     use url::Url;
@@ -63,7 +65,7 @@ mod tests {
                 thread: String::from("THREAD_ID"),
                 parent: String::from("PARENT_APPID"),
                 language: String::from("LANGUAGE_NAME"),
-                protocol_version: String::from("1.0"),
+                protocol_version: ProtocolVersion::V1_0,
                 fileuri: Url::parse("file://path/to/file").unwrap(),
             };
 

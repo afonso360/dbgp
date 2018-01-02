@@ -37,6 +37,7 @@ pub fn escape<S: Into<String>>(string: S) -> String {
     format!(r#""{}""#, string)
 }
 
+/// Checks if a string needs escaping
 pub fn needs_escape<SR: AsRef<str>>(string: SR) -> bool {
     let string = string.as_ref();
 

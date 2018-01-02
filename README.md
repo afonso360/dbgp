@@ -14,7 +14,7 @@ To run fuzzing on this crate install `cargo-fuzz` and run
 
 ## TODO
 
-Add Quickcheck tests when we are able to serialize/deserialize commands or packets
+We should consider changing to `Cow` instead of `String`
 
 
 ## License

@@ -20,9 +20,20 @@
 
 //! This is mostly for types that fit inside Packets
 
-pub mod error_codes;
+pub mod errors;
+
+pub use errors::*;
 
 pub type TransactionId = u64;
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+#[allow(non_camel_case_types)] // TODO: Is there a better way to do this?
+/// Enumerates all known protocol versions
+/// Currently the only accepted version is 1.0
+pub enum ProtocolVersion {
+    #[serde(rename = "1.0")]
+    V1_0,
+}
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]

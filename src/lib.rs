@@ -18,10 +18,11 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+// TODO: Make this work
+#![cfg_attr(not(test), deny(warnings))]
 #![deny(
     //missing_docs,
     missing_debug_implementations,
-    warnings
 )]
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]
 

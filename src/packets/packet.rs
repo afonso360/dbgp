@@ -25,6 +25,8 @@ use super::Result;
 use serde_xml_rs;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash)]
+/// Reads a packet as defined by the DBGp protocol
+/// Currently: data_length [NULL] xml_packet [NULL]
 pub struct Packet<I> {
     /// Do *not* rely on this, it could be anything!
     /// but we should't read more than this amount of bytes

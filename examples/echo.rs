@@ -27,7 +27,8 @@ fn handle_client(mut stream: TcpStream) {
 
 
 
-                let packet: AllPackets = Packet::deserialize(BufReader::new(&read[..])).unwrap();
+                let packet_reader = BufReader::new(&read[..]);
+                let packet: AllPackets = Packet::deserialize(packet_reader).unwrap();
                 println!("parsed: {:?}\n", packet);
 
                 match command_state {

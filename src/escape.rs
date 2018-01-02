@@ -46,7 +46,7 @@ pub fn needs_escape<SR: AsRef<str>>(string: SR) -> bool {
 
 pub fn unescape<S: Into<String>>(string: S) -> String {
     let mut string = string.into();
-    if !string.starts_with('"') {
+    if !string.starts_with('"') && !string.ends_with('"') {
         return string;
     }
 
@@ -113,6 +113,23 @@ mod tests {
         fn escape_roundtrip(test: String) -> bool {
             let original = test.clone();
             original == unescape(escape(test))
+        }
+
+        #[ignore]
+        fn multi_escape_roundtrip(test: String) -> bool {
+            let size = 10;
+            let original = test.clone();
+            let mut result = test;
+
+            for _ in 0..size {
+                result = escape(result);
+            }
+
+            for _ in 0..size {
+                result = unescape(result);
+            }
+
+            original == result
         }
     }
 }

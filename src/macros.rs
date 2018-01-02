@@ -23,7 +23,7 @@ macro_rules! deserialize_test {
     ($src: expr, $target: expr) => { {
             assert_eq!(
                 $target,
-                ::serde_xml_rs::deserialize($src.as_bytes()).unwrap()
+                ::serde_xml_rs::de::from_reader($src.as_bytes()).unwrap()
             );
     } }
 }

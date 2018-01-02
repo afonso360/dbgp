@@ -50,7 +50,7 @@ impl<'de, I: Deserialize<'de>> Packet<I> {
         input.read_until(b'\0', &mut inner_buf)?;
         inner_buf.pop();
 
-        let inner: I = serde_xml_rs::deserialize(&inner_buf[..])?;
+        let inner: I = serde_xml_rs::de::from_reader(&inner_buf[..])?;
 
         Ok(Packet {
             data_length,
@@ -65,9 +65,7 @@ impl<I: Serialize> Packet<I> {
     pub fn serialize(&self) -> Result<String> {
         let xml_prefix = r#"<?xml version="1.0" encoding="UTF-8" ?>"#;
 
-        let mut buffer = Vec::new();
-        serde_xml_rs::serialize(&self.inner, &mut buffer)?;
-        let inner = String::from_utf8(buffer)?;
+        let inner = serde_xml_rs::ser::to_string(&self.inner)?;
 
         Ok(format!("{}\0{}{}\0", inner.len() + xml_prefix.len(), xml_prefix, inner))
     }

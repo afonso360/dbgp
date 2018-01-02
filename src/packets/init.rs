@@ -40,13 +40,13 @@ pub struct Init {
 #[cfg(test)]
 mod tests {
     use ::*;
-    use serde_xml_rs::deserialize;
     use super::Init;
     use url::Url;
 
     #[test]
     fn deserialize_init_packet_simple() {
-            let s = r##"
+        deserialize_test!(
+            r##"
             <?xml version="1.0" encoding="UTF-8"?>
             <init appid="APPID"
                   idekey="IDE_KEY"
@@ -56,9 +56,8 @@ mod tests {
                   language="LANGUAGE_NAME"
                   protocol_version="1.0"
                   fileuri="file://path/to/file" />
-            "##;
-
-            let res = Init {
+            "##,
+            Init {
                 appid: String::from("APPID"),
                 idekey: String::from("IDE_KEY"),
                 session: String::from("DBGP_COOKIE"),
@@ -67,12 +66,9 @@ mod tests {
                 language: String::from("LANGUAGE_NAME"),
                 protocol_version: ProtocolVersion::V1_0,
                 fileuri: Url::parse("file://path/to/file").unwrap(),
-            };
-
-            let init: Init = deserialize(s.as_bytes()).unwrap();
-            assert_eq!(init, res);
+            }
+        )
     }
 
     // TODO: Parse with child elements
-
 }

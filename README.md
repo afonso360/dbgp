@@ -13,8 +13,8 @@ To run fuzzing on this crate install `cargo-fuzz` and run
 `cargo fuzz run -j4 fuzz_packet_parse -- -max_len=256`
 
 ## TODO
-
-We should consider changing to `Cow` instead of `String`
+ - Quickcheck roundtrip tests for packet (de)serialization
+ - We should consider changing to `Cow` instead of `String`
 
 
 ## License

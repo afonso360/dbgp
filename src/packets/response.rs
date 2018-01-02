@@ -84,12 +84,15 @@ pub struct ResponseStatus {
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "response")]
-pub struct ResponseGeneric {
+pub struct ResponseBreak {
      // TODO: xmlns parsing isn't working
      //pub xmlns: String,
      #[serde(deserialize_with = "::helpers::from_str")]
      pub transaction_id: TransactionId,
      pub command: String,
+
+     #[serde(rename = "$value")]
+     pub data: ErrorResponseString,
 }
 
 #[cfg(test)]
@@ -194,12 +197,10 @@ mod tests {
     //        any command The debugger engine may add an error element as a child of the
     //        response element
 
-    //Create ResponseBreak?
     //Remove ResponseGeneric
     //Test breakpoint commands
     //separate responses into multiple files
     #[test]
-    #[ignore]
     fn deserialize_response_break_packet() {
             deserialize_test!(
                 r##"
@@ -209,18 +210,23 @@ mod tests {
                           xmlns="urn:debugger_protocol_v1">
                     <error code="998">
                         <message>
-                            <![CDATA[./dbgg/debugger.lua:1027: attempt to index field 'previous_context' (a nil value)]]>
+                            <![CDATA[attempt to index field 'previous_context']]>
                         </message>
                     </error>
                 </response>
                 "##,
 
-                ResponseFeatureSet {
+                ResponseBreak {
                     //xmlns: Some(String::from("urn:debugger_protocol_v1")),
                     transaction_id: 999,
                     command: String::from("feature_set"),
-                    success: false,
-                    feature: String::from("language_name"),
+                    data: ErrorResponseString::Err(PacketError{
+                        code: 998,
+                        data: vec![
+                            Message::new("attempt to index field 'previous_context'")
+                        ],
+                    })
+
                 }
             )
     }

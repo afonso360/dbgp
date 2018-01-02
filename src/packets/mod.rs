@@ -47,16 +47,15 @@ pub enum PacketVariants {
 
     #[serde(rename = "response")]
     ResponseFeatureSet(ResponseFeatureSet),
+
+    #[serde(rename = "response")]
+    ResponseBreak(ResponseBreak),
 }
 
 pub mod init;
 pub mod packet;
 pub mod response;
 
-pub use self::init::Init;
-pub use self::packet::Packet;
-pub use self::response::{
-    ResponseStatus,
-    ResponseFeatureGet,
-    ResponseFeatureSet,
-};
+pub use self::init::*;
+pub use self::packet::*;
+pub use self::response::*;

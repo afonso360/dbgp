@@ -59,3 +59,20 @@ pub enum SessionType {
     Client,
     Server
 }
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
+#[serde(rename = "message")]
+pub struct Message {
+    #[serde(rename = "$value")]
+    pub text: String,
+}
+
+impl Message {
+    pub fn new<S: Into<String>>(message: S) -> Message {
+        let text = message.into();
+        Message {
+            text,
+        }
+    }
+}
+

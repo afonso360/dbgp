@@ -18,6 +18,8 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+use ::*;
+
 // TODO: This would be better, but we cant use #[serde(untagged)] on it
 // pub type ErrorResponse<T> = Result<T, PacketError>;
 
@@ -33,6 +35,7 @@ pub enum ErrorResponseString {
 #[derive(Debug, Clone, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 #[serde(rename = "error")]
 pub struct PacketError {
+     #[serde(deserialize_with = "::helpers::from_str")]
     pub code: u16,
 
     // TODO: It shouldn't just be string, we can also have cusetom xml nodes
@@ -40,13 +43,39 @@ pub struct PacketError {
     // into the client of this library as a string, so if this captures
     // the xml info as text, leave it
     #[serde(rename = "$value")]
-    pub message: String,
+    pub data: Vec<Message>,
 }
 
 trait DbgpError {
     /// Should provide a reason for the error
     // TODO: Should we return a static string?
     fn reason(&self) -> String;
+}
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn parse_error_node() {
+            deserialize_test!(
+                r##"
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <error code="998">
+                    <message>
+                        <![CDATA[attempt to index field 'previous_context']]>
+                    </message>
+                </error>
+                "##,
+
+                PacketError {
+                    code: 998,
+                    data: vec![
+                        Message::new("attempt to index field 'previous_context'"),
+                    ],
+                }
+            )
+    }
+
 }
 
 // TODO: Figure out a way to provide this, thats extensible to users
@@ -198,3 +227,4 @@ trait DbgpError {
 //         message: "Unknown error",
 //     }
 // ];
+

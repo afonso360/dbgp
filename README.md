@@ -1,4 +1,6 @@
 # dbgp [![travis-badge][]][travis] [![appveyor-badge][]][appveyor] [![coveralls-badge][]][coveralls] [![dependencyci-badge][]][dependencyci] [![license-badge][]][license] [![docs-badge][]][docs]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fafonso360%2Fdbgp.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fafonso360%2Fdbgp?ref=badge_shield)
+
 
 Implementation of the dbgp protocol
 
@@ -39,3 +41,6 @@ Read [LICENSE][license] for more information.
 [dbgp]: https://xdebug.org/docs-dbgp.php#id21
 [dbgp-git]: https://github.com/derickr/dbgp
 [dependencyci]: https://dependencyci.com/github/afonso360/dbgp
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fafonso360%2Fdbgp.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fafonso360%2Fdbgp?ref=badge_large)
